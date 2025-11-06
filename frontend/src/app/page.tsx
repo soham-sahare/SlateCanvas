@@ -85,8 +85,9 @@ export default function Home() {
               </div>
               
               {/* Hand-drawn aesthetic typography (using standard fonts but pastel colors) */}
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-[#f8fafc]" style={{textShadow: '0 2px 10px rgba(255,255,255,0.1)'}}>
-                Ready the <span className="text-[#ff8a65] italic font-serif">Slate.</span>
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-[#f8fafc] leading-[1.1]" style={{textShadow: '0 2px 10px rgba(255,255,255,0.1)'}}>
+                A clean <span className="text-[#ff8a65] italic font-serif">Slate.</span><br className="hidden sm:block" />
+                <span className="sm:hidden"> </span>An endless <span className="text-[#4dd0e1] italic font-serif">Canvas.</span>
               </h1>
               
               <p className="max-w-2xl mx-auto text-xl md:text-2xl text-[#cbd5e1] leading-relaxed font-light">
