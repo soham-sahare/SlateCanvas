@@ -8,12 +8,37 @@ import { PhysicalSlateWrapper } from "@/components/PhysicalSlateWrapper";
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement password reset request logic
-    console.log("Reset requested for:", email);
-    setIsSubmitted(true);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Something went wrong");
+      }
+
+      setIsSubmitted(true);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -51,23 +76,30 @@ export default function ForgotPasswordPage() {
 
             {!isSubmitted ? (
               <form onSubmit={handleSubmit} className="space-y-6">
+                {error && (
+                  <div className="bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 text-red-600 dark:text-red-400 text-[10px] font-bold py-2 px-3 rounded-lg text-center animate-shake">
+                    {error}
+                  </div>
+                )}
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-slate-300 ml-1">Email</label>
                   <input
                     type="email"
                     required
                     value={email}
+                    disabled={isLoading}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="sohamsahare"
-                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 dark:bg-[#f0f4f8] border border-slate-100 dark:border-none focus:outline-none focus:ring-2 focus:ring-amber-500/50 dark:focus:ring-[#ff8a65]/50 transition-all text-slate-900 dark:text-[#1e232b] placeholder-slate-300 dark:placeholder-[#1e232b]/30 font-medium"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 dark:bg-[#f0f4f8] border border-slate-100 dark:border-none focus:outline-none focus:ring-2 focus:ring-amber-500/50 dark:focus:ring-[#ff8a65]/50 transition-all text-slate-900 dark:text-[#1e232b] placeholder-slate-300 dark:placeholder-[#1e232b]/30 font-medium disabled:opacity-50"
                   />
                 </div>
                 
                 <button
                   type="submit"
-                  className="w-full py-4 px-4 rounded-2xl bg-amber-600 dark:bg-[#ff8a65] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-widest shadow-lg dark:shadow-[inset_0_-3px_0_rgba(0,0,0,0.1)] hover:bg-amber-700 dark:hover:bg-[#ffab91] hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-none"
+                  disabled={isLoading}
+                  className="w-full py-4 px-4 rounded-2xl bg-amber-600 dark:bg-[#ff8a65] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-widest shadow-lg dark:shadow-[inset_0_-3px_0_rgba(0,0,0,0.1)] hover:bg-amber-700 dark:hover:bg-[#ffab91] hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-none disabled:opacity-50 disabled:translate-y-0"
                 >
-                  Send Reset Link
+                  {isLoading ? "Sending..." : "Send Reset Link"}
                 </button>
               </form>
             ) : (
