@@ -18,9 +18,9 @@ export default function SignupPage() {
   return (
     <PhysicalSlateWrapper>
       {/* Header */}
-      <header className="relative w-full z-40 px-6 py-5 flex items-center justify-between border-b border-white/5">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded shadow-inner bg-[#3d4554] border border-white/10 flex items-center justify-center text-[#e2e8f0] group-hover:scale-105 transition-transform">
+      <header className="relative w-full z-40 px-10 py-6 flex items-center justify-between border-b border-white/5">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded shadow-inner bg-[#3d4554] border border-white/10 flex items-center justify-center text-[#e2e8f0]">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V6Z" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M9 12L13 8L17 12" stroke="#ff8a65" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -34,41 +34,41 @@ export default function SignupPage() {
 
       {/* Main Form Container */}
       <main className="flex-1 flex items-center justify-center p-6 relative z-10 w-full max-w-md mx-auto">
-        <div className="relative w-full p-8 sm:p-10 rounded-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_10px_40px_-10px_rgba(0,0,0,0.5)] bg-[#1e232b] border border-white/5 transition-all overflow-hidden">
+        <div className="relative w-full p-8 sm:p-10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.05)] bg-[#1e232b]/80 backdrop-blur-md border border-white/5 transition-all overflow-hidden flex flex-col items-center">
           
-          <div className="relative z-10 space-y-8">
-            <div className="text-center space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight text-[#f8fafc]" style={{textShadow: '0 2px 4px rgba(0,0,0,0.2)'}}>Create an account</h1>
-              <p className="text-sm text-[#cbd5e1]/80">Join SlateCanvas to save and share your boards.</p>
+          <div className="relative z-10 space-y-10 w-full">
+            <div className="text-center space-y-3">
+              <h1 className="text-3xl font-bold tracking-tight text-[#f8fafc]" style={{textShadow: '0 2px 4px rgba(0,0,0,0.4)'}}>Create an account</h1>
+              <p className="text-xs text-[#cbd5e1]/50 tracking-wider text-center px-4">Join SlateCanvas to save and share your boards.</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="space-y-1">
-                <label className="text-sm font-medium text-[#e2e8f0]">Email</label>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase tracking-widest font-bold text-[#cbd5e1]/40 ml-1">Email</label>
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]/50 focus:border-transparent transition-all text-white placeholder-white/30"
+                  placeholder="sohamsahare"
+                  className="w-full px-5 py-3.5 rounded-2xl bg-[#f0f4f8] border-none focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]/50 transition-all text-[#1e232b] placeholder-[#1e232b]/30 font-medium"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="text-sm font-medium text-[#e2e8f0]">Password</label>
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase tracking-widest font-bold text-[#cbd5e1]/40 ml-1">Password</label>
                 <input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/10 focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]/50 focus:border-transparent transition-all text-white placeholder-white/30"
+                  placeholder="••••••••••••"
+                  className="w-full px-5 py-3.5 rounded-2xl bg-[#f0f4f8] border-none focus:outline-none focus:ring-2 focus:ring-[#4dd0e1]/50 transition-all text-[#1e232b] placeholder-[#1e232b]/30 font-medium"
                 />
               </div>
               
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-xl bg-[#e2e8f0] text-[#1e293b] font-bold shadow-[inset_0_-3px_0_rgba(0,0,0,0.2)] hover:bg-white hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-[inset_0_1px_0_rgba(0,0,0,0.2)]"
+                className="w-full py-4 px-4 rounded-2xl bg-[#e2e8f0] text-[#1e293b] font-black text-xs uppercase tracking-widest shadow-[inset_0_-3px_0_rgba(0,0,0,0.1)] hover:bg-white hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-none"
               >
                 Sign Up
               </button>
@@ -76,30 +76,29 @@ export default function SignupPage() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10"></div>
+                <div className="w-full border-t border-white/5"></div>
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-[#1e232b] text-[#cbd5e1]/60">Or</span>
+              <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-bold text-white/10">
+                <span className="px-3 bg-[#1e232b]">Or</span>
               </div>
             </div>
 
             {/* Guest Flow */}
-            <div className="space-y-3">
+            <div className="space-y-4">
               <Link 
-                href="/board/guest" // Assuming /board is where the canvas will live
-                className="w-full flex justify-center py-3 px-4 rounded-xl border border-white/10 text-[#e2e8f0] font-semibold bg-white/5 hover:bg-white/10 transition-all shadow-sm"
+                href="/board/guest"
+                className="w-full flex justify-center py-4 px-4 rounded-2xl border border-white/5 text-[#e2e8f0] font-bold text-xs uppercase tracking-widest bg-white/5 hover:bg-white/10 transition-all shadow-sm"
               >
                 Continue as Guest
               </Link>
-              <p className="text-xs text-center text-amber-400/80 bg-amber-900/20 p-3 rounded-lg border border-amber-500/20">
-                <span className="font-semibold block mb-1">⚠️ Guest Mode Limitation</span>
-                Your work may be lost when you close the tab.
+              <p className="text-[10px] text-center text-amber-500/60 leading-relaxed max-w-[200px] mx-auto">
+                ⚠️ Guest Mode work may be lost when you close the tab.
               </p>
             </div>
 
-            <p className="text-sm text-center text-[#cbd5e1]/80 pt-2">
+            <p className="text-xs text-center text-[#cbd5e1]/40 font-medium tracking-wide pt-2">
               Already have an account?{" "}
-              <Link href="/login" className="font-semibold text-[#4dd0e1] hover:underline underline-offset-2">
+              <Link href="/login" className="font-bold text-[#4dd0e1] hover:underline underline-offset-4">
                 Log in
               </Link>
             </p>
