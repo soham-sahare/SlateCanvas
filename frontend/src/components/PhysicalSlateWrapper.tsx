@@ -72,27 +72,53 @@ export function PhysicalSlateWrapper({ children, showFooter = false }: PhysicalS
 
           {children}
 
-          {/* Faux Chalk/Marker Elements */}
+          {/* Faux Chalk/Marker Elements - Enhanced Scribbles */}
           {mounted && (
-            <div className="absolute bottom-16 w-full px-12 flex justify-between items-end opacity-10 dark:opacity-20 pointer-events-none z-0">
-              {/* Left Squiggly line */}
-              <div className="flex gap-20 items-end">
-                <svg className="w-20 h-10 text-[#f59e0b] dark:text-[#ffb74d]" viewBox="0 0 100 50" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 25 Q 15 5 25 25 T 45 25 T 65 25 T 85 25 T 95 25" />
-                </svg>
+            <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+              {/* Bottom Decorative Group */}
+              <div className="absolute bottom-16 w-full px-12 flex justify-between items-end opacity-10 dark:opacity-20">
+                {/* Left Squiggly line */}
+                <div className="flex gap-20 items-end">
+                  <svg className="w-20 h-10 text-[#f59e0b] dark:text-[#ffb74d]" viewBox="0 0 100 50" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 25 Q 15 5 25 25 T 45 25 T 65 25 T 85 25 T 95 25" />
+                  </svg>
 
-                {/* Triple wavy lines */}
-                <svg className="w-24 h-12 text-slate-300 dark:text-[#e2e8f0]" viewBox="0 0 100 50" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 15 Q 15 5 25 15 T 45 15 T 65 15 T 85 15" />
-                  <path d="M5 25 Q 15 15 25 25 T 45 25 T 65 25 T 85 25" />
-                  <path d="M5 35 Q 15 25 25 35 T 45 35 T 65 35 T 85 35" />
+                  {/* Triple wavy lines */}
+                  <svg className="w-24 h-12 text-slate-400 dark:text-[#e2e8f0]" viewBox="0 0 100 50" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 15 Q 15 5 25 15 T 45 15 T 65 15 T 85 15" />
+                    <path d="M5 25 Q 15 15 25 25 T 45 25 T 65 25 T 85 25" />
+                    <path d="M5 35 Q 15 25 25 35 T 45 35 T 65 35 T 85 35" />
+                  </svg>
+                </div>
+
+                {/* Right Arrow */}
+                <svg className="w-14 h-14 text-[#0891b2] dark:text-[#4dd0e1] -rotate-12 translate-y-4" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M80 20 C 80 50 50 80 20 80 M 20 80 L 40 80 M 20 80 L 20 60" />
                 </svg>
               </div>
 
-              {/* Right Arrow */}
-              <svg className="w-14 h-14 text-[#0891b2] dark:text-[#4dd0e1] -rotate-12 translate-y-4" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M80 20 C 80 50 50 80 20 80 M 20 80 L 40 80 M 20 80 L 20 60" />
-              </svg>
+              {/* Top Right Scribble (New) */}
+              <div className="absolute top-24 right-12 opacity-5 dark:opacity-10 rotate-12">
+                <svg className="w-24 h-24 text-[#ff8a65]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20,50 A30,30 0 1,1 80,50 A30,30 0 1,1 20,50" strokeDasharray="5,5" />
+                  <path d="M50,20 L50,80 M20,50 L80,50" opacity="0.5" />
+                </svg>
+              </div>
+
+              {/* Top Left Doodle (New) */}
+              <div className="absolute top-32 left-8 opacity-5 dark:opacity-10 -rotate-6">
+                <svg className="w-16 h-16 text-slate-400" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="M10,10 L30,40 L10,70" />
+                  <path d="M40,10 L60,40 L40,70" />
+                </svg>
+              </div>
+
+              {/* Random Edge Marks (New) */}
+              <div className="absolute top-1/2 right-4 opacity-5 dark:opacity-10 -translate-y-1/2">
+                <svg className="w-8 h-40 text-[#4dd0e1]" viewBox="0 0 40 200" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M10,20 L30,40 M10,60 L30,80 M10,100 L30,120 M10,140 L30,160 M10,180 L30,200" />
+                </svg>
+              </div>
             </div>
           )}
 
