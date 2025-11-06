@@ -26,22 +26,37 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   useEffect(() => {
     setMounted(true);
+    
+    const applyTheme = (targetTheme: Theme) => {
+      setTheme(targetTheme);
+      document.documentElement.classList.toggle("dark", targetTheme === "dark");
+    };
+
     const storedTheme = localStorage.getItem("slatecanvas-theme") as Theme | null;
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
     if (storedTheme) {
-      setTheme(storedTheme);
-      document.documentElement.classList.toggle("dark", storedTheme === "dark");
-    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
+      applyTheme(storedTheme);
+    } else {
+      applyTheme(mediaQuery.matches ? "dark" : "light");
     }
+
+    const handleSystemChange = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem("slatecanvas-theme")) {
+        applyTheme(e.matches ? "dark" : "light");
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleSystemChange);
+    return () => mediaQuery.removeEventListener("change", handleSystemChange);
   }, []);
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem("slatecanvas-theme", theme);
-      setTheme(theme);
-      document.documentElement.classList.toggle("dark", theme === "dark");
+    setTheme: (newTheme: Theme) => {
+      localStorage.setItem("slatecanvas-theme", newTheme);
+      setTheme(newTheme);
+      document.documentElement.classList.toggle("dark", newTheme === "dark");
     },
   };
 
