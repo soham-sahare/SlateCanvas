@@ -1,0 +1,99 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { PhysicalSlateWrapper } from "@/components/PhysicalSlateWrapper";
+
+export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Implement password reset request logic
+    console.log("Reset requested for:", email);
+    setIsSubmitted(true);
+  };
+
+  return (
+    <PhysicalSlateWrapper showFooter={true}>
+      {/* Header */}
+      <header className="relative w-full z-40 px-4 sm:px-10 py-6 flex items-center justify-between border-b border-black/5 dark:border-white/5 transition-colors">
+        <Link href="/" className="flex items-center gap-2 sm:gap-3">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded shadow-inner bg-slate-100 dark:bg-[#3d4554] border border-black/5 dark:border-white/10 flex items-center justify-center text-slate-800 dark:text-[#e2e8f0]">
+            <svg width="20" height="20" className="sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V6Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M9 12L13 8L17 12" stroke="#ff8a65" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M7 16H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <span className="text-lg sm:text-2xl font-semibold text-slate-800 dark:text-[#e2e8f0] tracking-tight text-shadow-sm transition-colors">SlateCanvas</span>
+        </Link>
+        <ThemeToggle />
+      </header>
+
+      {/* Main Form Container */}
+      <main className="flex-1 flex items-center justify-center p-6 relative z-10 w-full max-w-md mx-auto">
+        <div className="relative w-full p-8 sm:p-10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.05)] bg-white/90 dark:bg-[#1e232b]/80 backdrop-blur-md border border-slate-200 dark:border-white/5 transition-all overflow-hidden flex flex-col items-center">
+          
+          <div className="relative z-10 space-y-10 w-full">
+            <div className="text-center space-y-3">
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-[#f8fafc]" style={{textShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
+                {isSubmitted ? "Check your email" : "Reset password"}
+              </h1>
+              <p className="text-[10px] text-slate-600 dark:text-slate-300 tracking-widest uppercase font-bold text-center px-4 leading-relaxed">
+                {isSubmitted 
+                  ? "We've sent a recovery link to your inbox." 
+                  : "Enter your email to receive a password recovery link."}
+              </p>
+            </div>
+
+            {!isSubmitted ? (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-slate-300 ml-1">Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="sohamsahare"
+                    className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 dark:bg-[#f0f4f8] border border-slate-100 dark:border-none focus:outline-none focus:ring-2 focus:ring-amber-500/50 dark:focus:ring-[#ff8a65]/50 transition-all text-slate-900 dark:text-[#1e232b] placeholder-slate-300 dark:placeholder-[#1e232b]/30 font-medium"
+                  />
+                </div>
+                
+                <button
+                  type="submit"
+                  className="w-full py-4 px-4 rounded-2xl bg-amber-600 dark:bg-[#ff8a65] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-widest shadow-lg dark:shadow-[inset_0_-3px_0_rgba(0,0,0,0.1)] hover:bg-amber-700 dark:hover:bg-[#ffab91] hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-none"
+                >
+                  Send Reset Link
+                </button>
+              </form>
+            ) : (
+              <div className="pt-4 flex flex-col items-center">
+                <div className="w-16 h-16 rounded-full bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-500 mb-6 border border-amber-100 dark:border-amber-500/20">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <p className="text-xs text-center text-slate-400 dark:text-[#cbd5e1]/40 font-medium tracking-wide">
+                  Didn't receive it? <button onClick={() => setIsSubmitted(false)} className="font-bold text-amber-600 dark:text-[#ff8a65] hover:underline">Try again</button>
+                </p>
+              </div>
+            )}
+
+            <p className="text-xs text-center text-slate-400 dark:text-[#cbd5e1]/40 font-medium tracking-wide pt-2">
+              <Link href="/login" className="font-bold text-amber-600 dark:text-[#ff8a65] hover:underline underline-offset-4 flex items-center justify-center gap-2">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Back to log in
+              </Link>
+            </p>
+          </div>
+        </div>
+      </main>
+    </PhysicalSlateWrapper>
+  );
+}
