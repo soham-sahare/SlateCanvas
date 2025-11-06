@@ -37,8 +37,8 @@ export default function Home() {
         <div className="max-w-screen-lg mx-auto space-y-12">
           
           <div className="flex justify-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-orange-50 dark:bg-orange-500/5 border border-orange-100 dark:border-orange-500/20 text-orange-600 dark:text-orange-400 tracking-widest uppercase text-[10px] font-bold shadow-sm backdrop-blur-sm transition-all">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-orange-500 dark:bg-orange-400 animate-pulse"></span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-500/5 border border-cyan-100 dark:border-cyan-500/20 text-cyan-600 dark:text-cyan-400 tracking-widest uppercase text-[10px] font-bold shadow-sm backdrop-blur-sm transition-all">
+              <span className="flex h-1.5 w-1.5 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-pulse"></span>
               <span>The Collaborative Whiteboard</span>
             </div>
           </div>
