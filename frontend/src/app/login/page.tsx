@@ -71,7 +71,7 @@ export default function LoginPage() {
               
               <button
                 type="submit"
-                className="w-full py-4 px-4 rounded-2xl bg-slate-900 dark:bg-[#e2e8f0] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-widest shadow-lg dark:shadow-[inset_0_-3px_0_rgba(0,0,0,0.1)] hover:opacity-90 dark:hover:bg-white hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-none"
+                className="w-full py-4 px-4 rounded-2xl bg-cyan-600 dark:bg-[#4dd0e1] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-widest shadow-lg dark:shadow-[inset_0_-3px_0_rgba(0,0,0,0.1)] hover:bg-cyan-700 dark:hover:bg-[#80deea] hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-none"
               >
                 Log In
               </button>
@@ -79,7 +79,7 @@ export default function LoginPage() {
 
             <p className="text-xs text-center text-slate-400 dark:text-[#cbd5e1]/40 font-medium tracking-wide pt-2">
               Don't have an account?{" "}
-              <Link href="/signup" className="font-bold text-cyan-600 dark:text-[#4dd0e1] hover:underline underline-offset-4">
+              <Link href="/signup" className="font-bold text-amber-600 dark:text-[#ff8a65] hover:underline underline-offset-4">
                 Sign up
               </Link>
             </p>

@@ -68,7 +68,7 @@ export default function SignupPage() {
               
               <button
                 type="submit"
-                className="w-full py-4 px-4 rounded-2xl bg-slate-900 dark:bg-[#e2e8f0] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-widest shadow-lg dark:shadow-[inset_0_-3px_0_rgba(0,0,0,0.1)] hover:opacity-90 dark:hover:bg-white hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-none"
+                className="w-full py-4 px-4 rounded-2xl bg-amber-600 dark:bg-[#ff8a65] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-widest shadow-lg dark:shadow-[inset_0_-3px_0_rgba(0,0,0,0.1)] hover:bg-amber-700 dark:hover:bg-[#ffab91] hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-none"
               >
                 Sign Up
               </button>

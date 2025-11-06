@@ -8,7 +8,6 @@ export default function Home() {
   return (
     <PhysicalSlateWrapper showFooter={true}>
       {/* Header */}
-      {/* Header */}
       <header className="relative w-full z-40 px-4 sm:px-10 py-6 flex items-center justify-between border-b border-black/5 dark:border-white/5 transition-colors">
         <Link href="/" className="flex items-center gap-2 sm:gap-3">
           {/* Slate Canvas Logo - Custom SVG */}
@@ -26,7 +25,7 @@ export default function Home() {
           <ThemeToggle />
           <Link
             href="/login"
-            className="px-4 sm:px-6 py-2 font-medium text-[10px] sm:text-xs uppercase tracking-widest rounded border border-amber-500/30 dark:border-[#ffb74d]/30 text-amber-600 dark:text-[#ffb74d] hover:bg-amber-500/5 dark:hover:bg-[#ffb74d]/5 hover:border-amber-500/60 dark:hover:border-[#ffb74d]/60 transition-all whitespace-nowrap"
+            className="px-4 sm:px-6 py-2 font-medium text-[10px] sm:text-xs uppercase tracking-widest rounded border border-cyan-500/30 dark:border-[#4dd0e1]/30 text-cyan-600 dark:text-[#4dd0e1] hover:bg-cyan-500/5 dark:hover:bg-[#4dd0e1]/5 hover:border-cyan-500/60 dark:hover:border-[#4dd0e1]/60 transition-all whitespace-nowrap"
           >
             Log In
           </Link>
@@ -59,7 +58,7 @@ export default function Home() {
           <div className="pt-4 flex flex-col items-center justify-center">
             <Link
               href="/signup"
-              className="px-12 py-4 rounded-lg bg-slate-900 dark:bg-[#e2e8f0] text-white dark:text-[#1e293b] font-bold text-base shadow-xl hover:-translate-y-0.5 transition-all active:translate-y-0.5"
+              className="px-12 py-4 rounded-lg bg-amber-600 dark:bg-[#ff8a65] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:bg-amber-700 dark:hover:bg-[#ffab91] hover:-translate-y-0.5 transition-all active:translate-y-0.5"
             >
               Start Drawing
             </Link>
