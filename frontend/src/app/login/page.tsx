@@ -16,7 +16,7 @@ export default function LoginPage() {
   };
 
   return (
-    <PhysicalSlateWrapper>
+    <PhysicalSlateWrapper showFooter={true}>
       {/* Header */}
       <header className="relative w-full z-40 px-4 sm:px-10 py-6 flex items-center justify-between border-b border-white/5">
         <Link href="/" className="flex items-center gap-2 sm:gap-3">
