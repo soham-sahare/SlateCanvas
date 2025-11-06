@@ -27,7 +27,7 @@ export default function SignupPage() {
               <path d="M7 16H17" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <span className="text-xl font-semibold text-[#e2e8f0] tracking-tight text-shadow-sm">SlateCanvas</span>
+          <span className="text-2xl font-semibold text-[#e2e8f0] tracking-tight" style={{textShadow: '0 1px 2px rgba(0,0,0,0.3)'}}>SlateCanvas</span>
         </Link>
         <ThemeToggle />
       </header>
