@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Slate | Real-time Collaborative Whiteboard",
+  title: "SlateCanvas | Real-time Collaborative Whiteboard",
   description: "A real-time, collaborative whiteboard application built for Vercel.",
 };
 

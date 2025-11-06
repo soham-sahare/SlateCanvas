@@ -26,7 +26,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   useEffect(() => {
     setMounted(true);
-    const storedTheme = localStorage.getItem("slate-theme") as Theme | null;
+    const storedTheme = localStorage.getItem("slatecanvas-theme") as Theme | null;
     if (storedTheme) {
       setTheme(storedTheme);
       document.documentElement.classList.toggle("dark", storedTheme === "dark");
@@ -39,7 +39,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const value = {
     theme,
     setTheme: (theme: Theme) => {
-      localStorage.setItem("slate-theme", theme);
+      localStorage.setItem("slatecanvas-theme", theme);
       setTheme(theme);
       document.documentElement.classList.toggle("dark", theme === "dark");
     },

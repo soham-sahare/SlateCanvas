@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Slate API")
+app = FastAPI(title="SlateCanvas API")
 
 # Configure CORS
 app.add_middleware(
@@ -14,4 +14,4 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the Slate API"}
+    return {"message": "Welcome to the SlateCanvas API"}

@@ -1,6 +1,6 @@
-# Slate Backend
+# SlateCanvas Backend
 
-FastAPI application for the Slate project.
+FastAPI application for the SlateCanvas project.
 
 ## Setup
 

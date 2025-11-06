@@ -21,7 +21,7 @@ export default function Home() {
           <div className="w-9 h-9 rounded-xl bg-slate-800 dark:bg-slate-200 flex items-center justify-center text-white dark:text-slate-900 font-bold shadow-md">
             S
           </div>
-          <span className="text-2xl font-semibold text-slate-800 dark:text-slate-200 tracking-tight">Slate</span>
+          <span className="text-2xl font-semibold text-slate-800 dark:text-slate-200 tracking-tight">SlateCanvas</span>
         </div>
         
         <div className="flex items-center gap-4">
@@ -60,7 +60,7 @@ export default function Home() {
               onClick={() => setIsModalOpen(true)}
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 font-medium shadow-lg hover:bg-slate-700 dark:hover:bg-white transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              Open a new Slate
+              Open a new SlateCanvas
             </button>
             <button
               className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 backdrop-blur-md text-slate-700 dark:text-slate-300 font-medium hover:bg-white/80 dark:hover:bg-slate-800 transition-all shadow-sm"

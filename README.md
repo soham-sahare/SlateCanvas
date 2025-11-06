@@ -1,6 +1,6 @@
-# Slate
+# SlateCanvas
 
-Real-time, collaborative whiteboard application named Slate, designed for deployment on Vercel.
+Real-time, collaborative whiteboard application named SlateCanvas, designed for deployment on Vercel.
 
 ## Structure
 
