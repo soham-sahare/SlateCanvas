@@ -87,13 +87,13 @@ export default function SignupPage() {
             <div className="space-y-4">
               <Link 
                 href="/board/guest"
-                className="w-full flex justify-center py-4 px-4 rounded-2xl border border-slate-200 dark:border-white/5 text-slate-800 dark:text-[#e2e8f0] font-bold text-xs uppercase tracking-widest bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-all shadow-sm"
+                className="w-full flex flex-col items-center justify-center py-4 px-4 rounded-2xl border border-slate-200 dark:border-white/5 text-slate-800 dark:text-[#e2e8f0] bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-all shadow-sm group"
               >
-                Continue as Guest
+                <span className="font-bold text-xs uppercase tracking-widest">Continue as Guest</span>
+                <span className="text-[9px] text-amber-600 dark:text-amber-500/60 leading-relaxed mt-1 font-medium">
+                  ⚠️ Guest Mode work may be lost when you close the tab.
+                </span>
               </Link>
-              <p className="text-[10px] text-center text-amber-600 dark:text-amber-500/60 leading-relaxed max-w-[200px] mx-auto">
-                ⚠️ Guest Mode work may be lost when you close the tab.
-              </p>
             </div>
 
             <p className="text-xs text-center text-slate-400 dark:text-[#cbd5e1]/40 font-medium tracking-wide pt-2">
