@@ -76,8 +76,8 @@ export default function Home() {
           </header>
 
           {/* Main Hero Content */}
-          <main className="flex-1 flex flex-col items-center justify-center px-6 text-center relative z-10 pt-10">
-            <div className="max-w-3xl mx-auto space-y-10">
+          <main className="flex-1 flex flex-col items-center justify-center px-10 text-center relative z-10 pt-10">
+            <div className="max-w-screen-lg mx-auto space-y-10">
               
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-white/5 border border-white/10 text-[#4dd0e1] tracking-wider uppercase text-xs font-semibold shadow-sm">
                 <span className="flex h-1.5 w-1.5 rounded-full bg-[#4dd0e1]"></span>
@@ -85,12 +85,13 @@ export default function Home() {
               </div>
               
               {/* Hand-drawn aesthetic typography (using standard fonts but pastel colors) */}
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-[#f8fafc]" style={{textShadow: '0 2px 10px rgba(255,255,255,0.1)'}}>
-                Ready the <span className="text-[#ff8a65] italic font-serif">Slate.</span>
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-[#f8fafc] leading-[1.1]" style={{textShadow: '0 2px 10px rgba(255,255,255,0.1)'}}>
+                A clean <span className="text-[#ff8a65] italic font-serif">Slate.</span><br />
+                An endless <span className="text-[#4dd0e1] italic font-serif">Canvas.</span>
               </h1>
               
               <p className="max-w-2xl mx-auto text-xl md:text-2xl text-[#cbd5e1] leading-relaxed font-light">
-                Write, draw, and build together on an infinite canvas that feels just like the real thing.
+                The beautifully simple canvas where teams think and build together.
               </p>
               
               <div className="pt-6 flex flex-col items-center justify-center">
