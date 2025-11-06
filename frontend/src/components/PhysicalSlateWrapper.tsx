@@ -39,19 +39,27 @@ export function PhysicalSlateWrapper({ children, showFooter = false }: PhysicalS
           The Slate Surface (Inner layer) 
           Sits inside the frame, giving a thick border effect
         */}
-        <div className="absolute inset-[12px] md:inset-[18px] lg:inset-[24px] rounded-[8px] bg-[#f8fafc] dark:bg-[#1e232b] shadow-[inset_0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_4px_15px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col transition-colors duration-500">
+        <div className="absolute inset-[12px] md:inset-[18px] lg:inset-[24px] rounded-[8px] bg-slate-100 dark:bg-[#1e232b] shadow-[inset_0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_4px_15px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col transition-colors duration-500">
           
-          {/* Chalk dust / Whiteboard texture overlay */}
-          <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03] pointer-events-none" 
+          {/* Main Grain / Chalk dust texture */}
+          <div className="absolute inset-0 opacity-[0.06] dark:opacity-[0.03] pointer-events-none mix-blend-multiply dark:mix-blend-screen" 
             style={{ 
               backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
               backgroundRepeat: 'repeat'
             }} 
           />
           
+          {/* Canvas / Fiber texture for light mode */}
+          <div className="absolute inset-0 opacity-[0.04] dark:hidden pointer-events-none"
+            style={{ 
+              backgroundImage: 'repeating-linear-gradient(45deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px)',
+              backgroundSize: '3px 3px'
+            }}
+          />
+
           {/* Subtle eraser marks overlay - Inverse for light mode */}
-          <div className="absolute inset-0 opacity-5 dark:opacity-10 pointer-events-none"
-            style={{ backgroundImage: 'radial-gradient(ellipse at 30% 40%, rgba(0,0,0,0.05) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(0,0,0,0.05) 0%, transparent 50%)' }}
+          <div className="absolute inset-0 opacity-10 dark:opacity-10 pointer-events-none"
+            style={{ backgroundImage: 'radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.4) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(255,255,255,0.3) 0%, transparent 50%)' }}
           />
 
           {children}
