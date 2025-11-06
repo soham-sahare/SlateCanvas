@@ -13,13 +13,13 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 lg:p-12 transition-colors duration-500 bg-[#f0ede6] dark:bg-[#121212] font-sans selection:bg-[#4dd0e1]/30">
+    <div className="min-h-screen h-screen w-full flex flex-col transition-colors duration-500 bg-[#f0ede6] dark:bg-[#121212] font-sans selection:bg-[#4dd0e1]/30">
       
       {/* 
         The Physical Slate 
         Outer div represents the wooden frame 
       */}
-      <div className="relative w-full max-w-7xl h-[85vh] md:h-[90vh] rounded-[20px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col transition-all duration-300 ring-1 ring-black/5">
+      <div className="relative w-full h-full shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col transition-all duration-300 ring-1 ring-black/5">
         
         {/* Wooden Texture Frame (Outer layer) */}
         <div className="absolute inset-0 bg-[#8b5a2b] dark:bg-[#3a2511]">
