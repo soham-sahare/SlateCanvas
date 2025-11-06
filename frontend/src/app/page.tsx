@@ -25,7 +25,7 @@ export default function Home() {
           <ThemeToggle />
           <Link
             href="/login"
-            className="px-4 sm:px-6 py-2 font-medium text-[10px] sm:text-xs uppercase tracking-widest rounded border border-cyan-500/30 dark:border-[#4dd0e1]/30 text-cyan-600 dark:text-[#4dd0e1] hover:bg-cyan-500/5 dark:hover:bg-[#4dd0e1]/5 hover:border-cyan-500/60 dark:hover:border-[#4dd0e1]/60 transition-all whitespace-nowrap"
+            className="px-4 sm:px-6 py-2 font-medium text-[10px] sm:text-xs uppercase tracking-widest rounded border border-amber-500/30 dark:border-[#ffb74d]/30 text-amber-600 dark:text-[#ffb74d] hover:bg-amber-500/5 dark:hover:bg-[#ffb74d]/5 hover:border-amber-500/60 dark:hover:border-[#ffb74d]/60 transition-all whitespace-nowrap"
           >
             Log In
           </Link>
@@ -37,8 +37,8 @@ export default function Home() {
         <div className="max-w-screen-lg mx-auto space-y-12">
           
           <div className="flex justify-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-cyan-600 dark:text-[#4dd0e1] tracking-widest uppercase text-[10px] font-bold shadow-sm backdrop-blur-sm transition-all">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-cyan-500 dark:bg-[#4dd0e1] animate-pulse"></span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-orange-50 dark:bg-orange-500/5 border border-orange-100 dark:border-orange-500/20 text-orange-600 dark:text-orange-400 tracking-widest uppercase text-[10px] font-bold shadow-sm backdrop-blur-sm transition-all">
+              <span className="flex h-1.5 w-1.5 rounded-full bg-orange-500 dark:bg-orange-400 animate-pulse"></span>
               <span>The Collaborative Whiteboard</span>
             </div>
           </div>

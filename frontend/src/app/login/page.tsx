@@ -57,7 +57,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between ml-1">
                   <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 dark:text-[#cbd5e1]/40">Password</label>
-                  <a href="#" className="text-[10px] font-bold text-cyan-600 dark:text-[#4dd0e1] hover:underline uppercase tracking-wider">Forgot?</a>
+                  <a href="#" className="text-[10px] font-bold text-amber-600 dark:text-[#ff8a65] hover:underline uppercase tracking-wider transition-colors">Forgot?</a>
                 </div>
                 <input
                   type="password"
@@ -65,13 +65,13 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 dark:bg-[#f0f4f8] border border-slate-100 dark:border-none focus:outline-none focus:ring-2 focus:ring-cyan-500/50 dark:focus:ring-[#4dd0e1]/50 transition-all text-slate-900 dark:text-[#1e232b] placeholder-slate-300 dark:placeholder-[#1e232b]/30 font-medium"
+                  className="w-full px-5 py-3.5 rounded-2xl bg-slate-50 dark:bg-[#f0f4f8] border border-slate-100 dark:border-none focus:outline-none focus:ring-2 focus:ring-amber-500/50 dark:focus:ring-[#ff8a65]/50 transition-all text-slate-900 dark:text-[#1e232b] placeholder-slate-300 dark:placeholder-[#1e232b]/30 font-medium"
                 />
               </div>
               
               <button
                 type="submit"
-                className="w-full py-4 px-4 rounded-2xl bg-cyan-600 dark:bg-[#4dd0e1] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-widest shadow-lg dark:shadow-[inset_0_-3px_0_rgba(0,0,0,0.1)] hover:bg-cyan-700 dark:hover:bg-[#80deea] hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-none"
+                className="w-full py-4 px-4 rounded-2xl bg-amber-600 dark:bg-[#ff8a65] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-widest shadow-lg dark:shadow-[inset_0_-3px_0_rgba(0,0,0,0.1)] hover:bg-amber-700 dark:hover:bg-[#ffab91] hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-none"
               >
                 Log In
               </button>
@@ -79,7 +79,7 @@ export default function LoginPage() {
 
             <p className="text-xs text-center text-slate-400 dark:text-[#cbd5e1]/40 font-medium tracking-wide pt-2">
               Don't have an account?{" "}
-              <Link href="/signup" className="font-bold text-amber-600 dark:text-[#ff8a65] hover:underline underline-offset-4">
+              <Link href="/signup" className="font-bold text-amber-600 dark:text-[#ff8a65] hover:underline underline-offset-4 transition-colors">
                 Sign up
               </Link>
             </p>
