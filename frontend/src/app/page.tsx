@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { LoginModal } from "@/components/LoginModal";
 import Link from "next/link";
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -67,13 +65,13 @@ export default function Home() {
             
             <div className="flex items-center gap-4">
               <ThemeToggle />
-              <button
-                onClick={() => setIsModalOpen(true)}
+              <Link
+                href="/login"
                 className="px-6 py-2.5 font-medium text-sm rounded border-2 border-[#ffb74d]/40 text-[#ffb74d] hover:bg-[#ffb74d]/10 hover:border-[#ffb74d] transition-all"
                 style={{textShadow: '0 1px 2px rgba(0,0,0,0.2)'}}
               >
                 Log In
-              </button>
+              </Link>
             </div>
           </header>
 
@@ -96,12 +94,12 @@ export default function Home() {
               </p>
               
               <div className="pt-6 flex flex-col items-center justify-center">
-                <button
-                  onClick={() => setIsModalOpen(true)}
+                <Link
+                  href="/signup"
                   className="px-10 py-4 rounded bg-[#e2e8f0] text-[#1e293b] font-bold text-lg shadow-[inset_0_-3px_0_rgba(0,0,0,0.2),0_4px_15px_rgba(255,255,255,0.1)] hover:bg-white hover:-translate-y-0.5 transition-all active:translate-y-0.5 active:shadow-[inset_0_1px_0_rgba(0,0,0,0.2)]"
                 >
                   Start Drawing
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -140,8 +138,6 @@ export default function Home() {
           </footer>
         </div>
       </div>
-
-      <LoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
