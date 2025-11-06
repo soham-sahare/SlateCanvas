@@ -44,7 +44,7 @@ export default function LoginPage() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 dark:text-[#cbd5e1]/40 ml-1">Email</label>
+                <label className="text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-slate-300 ml-1">Email</label>
                 <input
                   type="email"
                   required
@@ -56,7 +56,7 @@ export default function LoginPage() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between ml-1">
-                  <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 dark:text-[#cbd5e1]/40">Password</label>
+                  <label className="text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-slate-300">Password</label>
                   <a href="#" className="text-[10px] font-bold text-amber-600 dark:text-[#ff8a65] hover:underline uppercase tracking-wider transition-colors">Forgot?</a>
                 </div>
                 <input

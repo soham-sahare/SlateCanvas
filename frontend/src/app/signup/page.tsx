@@ -44,7 +44,7 @@ export default function SignupPage() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 dark:text-[#cbd5e1]/40 ml-1">Email</label>
+                <label className="text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-slate-300 ml-1">Email</label>
                 <input
                   type="email"
                   required
@@ -55,7 +55,7 @@ export default function SignupPage() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest font-bold text-slate-400 dark:text-[#cbd5e1]/40 ml-1">Password</label>
+                <label className="text-[10px] uppercase tracking-widest font-bold text-slate-600 dark:text-slate-300 ml-1">Password</label>
                 <input
                   type="password"
                   required
