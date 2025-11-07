@@ -1,3 +1,12 @@
+import os
+import sys
+from pathlib import Path
+
+# Add the project root to sys.path to support 'backend.*' imports
+project_root = str(Path(__file__).parent.parent)
+if project_root not in sys.path:
+    sys.path.append(project_root)
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.database import connect_to_mongo, close_mongo_connection
