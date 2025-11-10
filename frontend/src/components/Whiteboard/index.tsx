@@ -29,6 +29,7 @@ export const Whiteboard: React.FC = () => {
         selectedIds={state.selectedIds}
         onElementsChange={(elements) => setState(prev => ({ ...prev, elements }))}
         onSelectionChange={(selectedIds) => setState(prev => ({ ...prev, selectedIds }))}
+        onOffsetChange={(offset) => setState(prev => ({ ...prev, offset }))}
       />
 
       {/* Zoom / Info Indicator */}

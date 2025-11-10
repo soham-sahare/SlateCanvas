@@ -29,10 +29,63 @@ export const useWhiteboard = () => {
     }));
   }, []);
 
+  const [dragStartPoint, setDragStartPoint] = useState<Point | null>(null);
+
   const setTool = useCallback((tool: Tool) => {
     setState((prev) => ({ ...prev, currentTool: tool }));
   }, []);
 
+  const moveElements = useCallback((deltaX: number, deltaY: number) => {
+    setState((prev) => ({
+      ...prev,
+      elements: prev.elements.map((el) => {
+        if (prev.selectedIds.includes(el.id)) {
+          if (el.type === "draw") {
+            const drawEl = el as any;
+            return {
+              ...drawEl,
+              points: drawEl.points.map((p: Point) => ({
+                x: p.x + deltaX,
+                y: p.y + deltaY,
+              })),
+            };
+          }
+          return { ...el, x: el.x + deltaX, y: el.y + deltaY };
+        }
+        return el;
+      }),
+    }));
+  }, []);
+
+  const getElementAtPosition = useCallback((point: Point): WhiteboardElement | null => {
+    // Search backwards (top elements first)
+    for (let i = state.elements.length - 1; i >= 0; i--) {
+      const el = state.elements[i];
+      
+      if (el.type === "draw") {
+        const drawEl = el as any;
+        // Simple bounding box check for draw elements for now
+        const minX = Math.min(...drawEl.points.map((p: Point) => p.x));
+        const maxX = Math.max(...drawEl.points.map((p: Point) => p.x));
+        const minY = Math.min(...drawEl.points.map((p: Point) => p.y));
+        const maxY = Math.max(...drawEl.points.map((p: Point) => p.y));
+        if (point.x >= minX - 10 && point.x <= maxX + 10 && point.y >= minY - 10 && point.y <= maxY + 10) {
+          return el;
+        }
+        continue;
+      }
+
+      const x = Math.min(el.x, el.x + el.width);
+      const y = Math.min(el.y, el.y + el.height);
+      const w = Math.abs(el.width);
+      const h = Math.abs(el.height);
+
+      if (point.x >= x && point.x <= x + w && point.y >= y && point.y <= y + h) {
+        return el;
+      }
+    }
+    return null;
+  }, [state.elements]);
   const getCanvasCoordinates = useCallback((clientX: number, clientY: number): Point => {
     if (!canvasRef.current) return { x: 0, y: 0 };
     const rect = canvasRef.current.getBoundingClientRect();
@@ -60,7 +113,6 @@ export const useWhiteboard = () => {
       return { ...prev, selectedIds: [id] };
     });
   }, []);
-
   return {
     state,
     setState,
@@ -68,8 +120,12 @@ export const useWhiteboard = () => {
     setTool,
     addElement,
     updateElement,
+    moveElements,
+    getElementAtPosition,
     getCanvasCoordinates,
     clearSelection,
     selectElement,
+    dragStartPoint,
+    setDragStartPoint,
   };
 };
