@@ -69,6 +69,47 @@ export const Canvas: React.FC<CanvasProps> = ({
         if (el.backgroundColor !== "transparent") {
           ctx.fill();
         }
+      } else if (el.type === "diamond") {
+        const cx = el.x + el.width / 2;
+        const cy = el.y + el.height / 2;
+        ctx.moveTo(cx, el.y);
+        ctx.lineTo(el.x + el.width, cy);
+        ctx.lineTo(cx, el.y + el.height);
+        ctx.lineTo(el.x, cy);
+        ctx.closePath();
+        ctx.stroke();
+        if (el.backgroundColor !== "transparent") {
+          ctx.fill();
+        }
+      } else if (el.type === "line" || el.type === "arrow") {
+        ctx.moveTo(el.x, el.y);
+        ctx.lineTo(el.x + el.width, el.y + el.height);
+        ctx.stroke();
+
+        if (el.type === "arrow") {
+          // Arrow head
+          const angle = Math.atan2(el.height, el.width);
+          const headLen = 15 / zoom;
+          ctx.lineTo(
+            el.x + el.width - headLen * Math.cos(angle - Math.PI / 6),
+            el.y + el.height - headLen * Math.sin(angle - Math.PI / 6)
+          );
+          ctx.moveTo(el.x + el.width, el.y + el.height);
+          ctx.lineTo(
+            el.x + el.width - headLen * Math.cos(angle + Math.PI / 6),
+            el.y + el.height - headLen * Math.sin(angle + Math.PI / 6)
+          );
+          ctx.stroke();
+        }
+      } else if (el.type === "draw") {
+        const drawEl = el as any;
+        if (drawEl.points && drawEl.points.length > 0) {
+          ctx.moveTo(drawEl.points[0].x, drawEl.points[0].y);
+          for (let i = 1; i < drawEl.points.length; i++) {
+            ctx.lineTo(drawEl.points[i].x, drawEl.points[i].y);
+          }
+          ctx.stroke();
+        }
       }
       
       // Handle selection highlights
@@ -144,7 +185,8 @@ export const Canvas: React.FC<CanvasProps> = ({
       backgroundColor: "transparent",
       strokeWidth: 2,
       opacity: 1,
-    };
+      ...(currentTool === "draw" ? { points: [point] } : {}),
+    } as any;
     
     setCurrentElement(newElement);
   };
@@ -153,21 +195,34 @@ export const Canvas: React.FC<CanvasProps> = ({
     if (!isDrawing || !startPoint || !currentElement) return;
 
     const point = getCanvasCoords(e);
-    const width = point.x - startPoint.x;
-    const height = point.y - startPoint.y;
+    
+    if (currentTool === "draw") {
+      const drawEl = currentElement as any;
+      setCurrentElement({
+        ...drawEl,
+        points: [...drawEl.points, point],
+      });
+    } else {
+      const width = point.x - startPoint.x;
+      const height = point.y - startPoint.y;
 
-    setCurrentElement({
-      ...currentElement,
-      width,
-      height,
-    });
+      setCurrentElement({
+        ...currentElement,
+        width,
+        height,
+      });
+    }
   };
 
   const handleMouseUp = () => {
     if (!isDrawing || !currentElement) return;
 
-    // Only add if it has some size
-    if (Math.abs(currentElement.width) > 2 || Math.abs(currentElement.height) > 2) {
+    // Only add if it has some size or points
+    const deservesAddition = currentTool === "draw" 
+      ? (currentElement as any).points.length > 2
+      : Math.abs(currentElement.width) > 2 || Math.abs(currentElement.height) > 2;
+
+    if (deservesAddition) {
       onElementsChange([...elements, currentElement]);
     }
     
