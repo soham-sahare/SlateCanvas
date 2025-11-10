@@ -3,6 +3,7 @@
 import React from "react";
 import { Canvas } from "./Canvas";
 import { Toolbar } from "./Toolbar";
+import { PropertiesPanel } from "./PropertiesPanel";
 import { useWhiteboard } from "@/hooks/useWhiteboard";
 
 export const Whiteboard: React.FC = () => {
@@ -10,15 +11,25 @@ export const Whiteboard: React.FC = () => {
     state, 
     setTool, 
     addElement, 
+    deleteElement,
+    updateElement,
     setState,
     selectElement 
   } = useWhiteboard();
+
+  const selectedElements = state.elements.filter(el => state.selectedIds.includes(el.id));
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-transparent">
       <Toolbar 
         currentTool={state.currentTool} 
         onToolSelect={setTool} 
+      />
+
+      <PropertiesPanel 
+        selectedElements={selectedElements}
+        onUpdate={updateElement}
+        onDelete={deleteElement}
       />
       
       <Canvas

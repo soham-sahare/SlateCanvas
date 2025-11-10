@@ -29,6 +29,14 @@ export const useWhiteboard = () => {
     }));
   }, []);
 
+  const deleteElement = useCallback((id: string) => {
+    setState((prev) => ({
+      ...prev,
+      elements: prev.elements.filter((el) => el.id !== id),
+      selectedIds: prev.selectedIds.filter((sid) => sid !== id),
+    }));
+  }, []);
+
   const [dragStartPoint, setDragStartPoint] = useState<Point | null>(null);
 
   const setTool = useCallback((tool: Tool) => {
@@ -120,6 +128,7 @@ export const useWhiteboard = () => {
     setTool,
     addElement,
     updateElement,
+    deleteElement,
     moveElements,
     getElementAtPosition,
     getCanvasCoordinates,
