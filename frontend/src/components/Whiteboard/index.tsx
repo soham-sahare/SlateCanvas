@@ -4,9 +4,19 @@ import React from "react";
 import { Canvas } from "./Canvas";
 import { Toolbar } from "./Toolbar";
 import { PropertiesPanel } from "./PropertiesPanel";
+import { CollaborativeRoom } from "./CollaborativeRoom";
+import { Cursors } from "./Cursors";
 import { useWhiteboard } from "@/hooks/useWhiteboard";
 
 export const Whiteboard: React.FC = () => {
+  return (
+    <CollaborativeRoom>
+      <WhiteboardContent />
+    </CollaborativeRoom>
+  );
+};
+
+const WhiteboardContent: React.FC = () => {
   const { 
     state, 
     setTool, 
@@ -25,6 +35,8 @@ export const Whiteboard: React.FC = () => {
         currentTool={state.currentTool} 
         onToolSelect={setTool} 
       />
+
+      <Cursors />
 
       <PropertiesPanel 
         selectedElements={selectedElements}

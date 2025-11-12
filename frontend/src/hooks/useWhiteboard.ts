@@ -1,6 +1,9 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { WhiteboardElement, Tool, Point, WhiteboardState } from "@/types/whiteboard";
 import { v4 as uuidv4 } from "uuid";
+import * as Y from "yjs";
+import { LiveblocksYjsProvider } from "@liveblocks/yjs";
+import { useRoom } from "../liveblocks.config";
 
 export const useWhiteboard = () => {
   const [state, setState] = useState<WhiteboardState>({
@@ -13,29 +16,81 @@ export const useWhiteboard = () => {
     offset: { x: 0, y: 0 },
   });
 
+  const room = useRoom();
+  const [doc, setDoc] = useState<Y.Doc>();
+  const [provider, setProvider] = useState<any>();
+
+  // Initialize Y.Doc and Provider
+  useEffect(() => {
+    const yDoc = new Y.Doc();
+    const yProvider = new LiveblocksYjsProvider(room, yDoc);
+    setDoc(yDoc);
+    setProvider(yProvider);
+
+    return () => {
+      yDoc.destroy();
+      yProvider.destroy();
+    };
+  }, [room]);
+
+  const yElements = useMemo(() => {
+    if (!doc) return null;
+    return doc.getArray<WhiteboardElement>("elements");
+  }, [doc]);
+
+  // Sync Y.Array with React state
+  useEffect(() => {
+    if (!yElements) return;
+
+    const handleChange = () => {
+      setState((prev) => ({
+        ...prev,
+        elements: yElements.toArray(),
+      }));
+    };
+
+    yElements.observe(handleChange);
+    handleChange(); // Initial sync
+
+    return () => {
+      yElements.unobserve(handleChange);
+    };
+  }, [yElements]);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const addElement = useCallback((element: WhiteboardElement) => {
-    setState((prev) => ({
-      ...prev,
-      elements: [...prev.elements, element],
-    }));
-  }, []);
+    if (!yElements) return;
+    yElements.push([element]);
+  }, [yElements]);
 
   const updateElement = useCallback((id: string, updates: Partial<WhiteboardElement>) => {
-    setState((prev) => ({
-      ...prev,
-      elements: prev.elements.map((el) => (el.id === id ? { ...el, ...updates } : el)),
-    }));
-  }, []);
+    if (!yElements || !doc) return;
+    
+    doc.transact(() => {
+      const index = yElements.toArray().findIndex(el => el.id === id);
+      if (index !== -1) {
+        const current = yElements.get(index);
+        yElements.delete(index);
+        yElements.insert(index, [{ ...current, ...updates }]);
+      }
+    });
+  }, [yElements, doc]);
 
   const deleteElement = useCallback((id: string) => {
-    setState((prev) => ({
-      ...prev,
-      elements: prev.elements.filter((el) => el.id !== id),
-      selectedIds: prev.selectedIds.filter((sid) => sid !== id),
-    }));
-  }, []);
+    if (!yElements || !doc) return;
+
+    doc.transact(() => {
+      const index = yElements.toArray().findIndex(el => el.id === id);
+      if (index !== -1) {
+        yElements.delete(index);
+      }
+      setState((prev) => ({
+        ...prev,
+        selectedIds: prev.selectedIds.filter((sid) => sid !== id),
+      }));
+    });
+  }, [yElements, doc]);
 
   const [dragStartPoint, setDragStartPoint] = useState<Point | null>(null);
 
@@ -44,26 +99,35 @@ export const useWhiteboard = () => {
   }, []);
 
   const moveElements = useCallback((deltaX: number, deltaY: number) => {
-    setState((prev) => ({
-      ...prev,
-      elements: prev.elements.map((el) => {
-        if (prev.selectedIds.includes(el.id)) {
+    if (!yElements || !doc) return;
+
+    doc.transact(() => {
+      const elements = yElements.toArray();
+      state.selectedIds.forEach(id => {
+        const index = elements.findIndex(el => el.id === id);
+        if (index !== -1) {
+          const el = elements[index];
+          let updated;
           if (el.type === "draw") {
             const drawEl = el as any;
-            return {
+            updated = {
               ...drawEl,
               points: drawEl.points.map((p: Point) => ({
                 x: p.x + deltaX,
                 y: p.y + deltaY,
               })),
             };
+          } else {
+            updated = { ...el, x: el.x + deltaX, y: el.y + deltaY };
           }
-          return { ...el, x: el.x + deltaX, y: el.y + deltaY };
+          yElements.delete(index);
+          yElements.insert(index, [updated]);
+          // Refresh local array for next iteration in loop
+          elements[index] = updated;
         }
-        return el;
-      }),
-    }));
-  }, []);
+      });
+    });
+  }, [yElements, doc, state.selectedIds]);
 
   const getElementAtPosition = useCallback((point: Point): WhiteboardElement | null => {
     // Search backwards (top elements first)

@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { Point, Tool, WhiteboardElement } from "@/types/whiteboard";
 import { v4 as uuidv4 } from "uuid";
+import { useUpdateMyPresence } from "../../liveblocks.config";
 
 interface CanvasProps {
   elements: WhiteboardElement[];
@@ -14,7 +15,6 @@ interface CanvasProps {
   onOffsetChange: (offset: Point) => void;
   selectedIds: string[];
 }
-
 export const Canvas: React.FC<CanvasProps> = ({
   elements,
   currentTool,
@@ -25,6 +25,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   onOffsetChange,
   selectedIds,
 }) => {
+  const updateMyPresence = useUpdateMyPresence();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState<Point | null>(null);
@@ -350,6 +351,8 @@ export const Canvas: React.FC<CanvasProps> = ({
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    updateMyPresence({ cursor: { x: e.clientX, y: e.clientY } });
+
     if (isSpacePressed && startPoint) {
       const deltaX = e.clientX - startPoint.x;
       const deltaY = e.clientY - startPoint.y;
@@ -460,7 +463,10 @@ export const Canvas: React.FC<CanvasProps> = ({
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
+      onMouseLeave={() => {
+        handleMouseUp();
+        updateMyPresence({ cursor: null });
+      }}
       style={{ cursor: isSpacePressed ? "grab" : (resizeHandle ? "nwse-resize" : "default") }}
       className="absolute inset-0 z-0 touch-none bg-transparent"
     />
