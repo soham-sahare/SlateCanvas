@@ -62,6 +62,16 @@ export default function DashboardPage() {
     router.push(`/canvas/${id}`);
   };
 
+  const deleteSlate = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (confirm("Are you sure you want to delete this slate?")) {
+      const updated = slates.filter(s => s.id !== id);
+      setSlates(updated);
+      localStorage.setItem("my-slates", JSON.stringify(updated));
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/";
@@ -124,12 +134,16 @@ export default function DashboardPage() {
                 >
                   <div className="flex justify-between items-start">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: slate.previewColor }} />
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
-                        <path d="M12 20h9"></path>
-                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    <button 
+                      onClick={(e) => deleteSlate(e, slate.id)}
+                      className="p-2 -mr-2 -mt-2 opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all text-slate-400"
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
                       </svg>
-                    </div>
+                    </button>
                   </div>
                   
                   <div>
