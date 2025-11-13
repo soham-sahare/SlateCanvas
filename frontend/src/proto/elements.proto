@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package whiteboard;
+
+message Point {
+  float x = 1;
+  float y = 2;
+}
+
+message Element {
+  string id = 1;
+  string type = 2; // rect, ellipse, diamond, line, arrow, draw, text
+  float x = 3;
+  float y = 4;
+  float width = 5;
+  float height = 6;
+  string strokeColor = 7;
+  string backgroundColor = 8;
+  float strokeWidth = 9;
+  float opacity = 10;
+  
+  // Free draw points
+  repeated Point points = 11;
+  
+  // Text specific
+  string text = 12;
+  float fontSize = 13;
+  string fontFamily = 14;
+}
+
+message WhiteboardState {
+  string id = 1;
+  string name = 2;
+  repeated Element elements = 3;
+}

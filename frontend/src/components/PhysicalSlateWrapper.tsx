@@ -7,9 +7,14 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 interface PhysicalSlateWrapperProps {
   children: React.ReactNode;
   showFooter?: boolean;
+  noBorder?: boolean;
 }
 
-export function PhysicalSlateWrapper({ children, showFooter = false }: PhysicalSlateWrapperProps) {
+export function PhysicalSlateWrapper({ 
+  children, 
+  showFooter = false,
+  noBorder = false 
+}: PhysicalSlateWrapperProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -39,7 +44,11 @@ export function PhysicalSlateWrapper({ children, showFooter = false }: PhysicalS
           The Slate Surface (Inner layer) 
           Sits inside the frame, giving a thick border effect
         */}
-        <div className="absolute inset-[12px] md:inset-[18px] lg:inset-[24px] rounded-[8px] bg-[#eeefe9] dark:bg-[#1e232b] shadow-[inset_0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_4px_15px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col transition-colors duration-500">
+        <div className={`absolute transition-all duration-500 overflow-hidden flex flex-col ${
+          noBorder 
+            ? "inset-0 rounded-0 shadow-none border-none" 
+            : "inset-[12px] md:inset-[18px] lg:inset-[24px] rounded-[8px] bg-[#eeefe9] dark:bg-[#1e232b] shadow-[inset_0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_4px_15px_rgba(0,0,0,0.4)]"
+        }`}>
           
           {/* Main Grain / Chalk dust texture */}
           <div className="absolute inset-0 opacity-[0.12] dark:opacity-[0.03] pointer-events-none mix-blend-multiply dark:mix-blend-screen" 

@@ -57,6 +57,10 @@ export const useWhiteboard = () => {
     };
   }, [yElements]);
 
+  useEffect(() => {
+    (window as any).whiteboardElements = state.elements;
+  }, [state.elements]);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const addElement = useCallback((element: WhiteboardElement) => {

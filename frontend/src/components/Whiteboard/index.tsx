@@ -8,9 +8,13 @@ import { CollaborativeRoom } from "./CollaborativeRoom";
 import { Cursors } from "./Cursors";
 import { useWhiteboard } from "@/hooks/useWhiteboard";
 
-export const Whiteboard: React.FC = () => {
+interface WhiteboardProps {
+  roomId?: string;
+}
+
+export const Whiteboard: React.FC<WhiteboardProps> = ({ roomId = "default-room" }) => {
   return (
-    <CollaborativeRoom>
+    <CollaborativeRoom roomId={roomId}>
       <WhiteboardContent />
     </CollaborativeRoom>
   );

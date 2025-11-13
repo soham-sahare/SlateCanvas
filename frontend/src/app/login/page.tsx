@@ -35,7 +35,7 @@ export default function LoginPage() {
 
       // Store token and redirect
       localStorage.setItem("token", data.access_token);
-      window.location.href = "/board"; // Redirect to board after login
+      window.location.href = "/dashboard"; // Redirect to dashboard after login
     } catch (err: any) {
       setError(err.message);
     } finally {

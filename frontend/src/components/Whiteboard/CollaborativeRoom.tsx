@@ -6,11 +6,10 @@ import { ClientSideSuspense } from "@liveblocks/react";
 
 interface CollaborativeRoomProps {
   children: ReactNode;
+  roomId: string;
 }
 
-export const CollaborativeRoom: React.FC<CollaborativeRoomProps> = ({ children }) => {
-  // Use a unique room ID for now. In a real app, this would be dynamic (e.g., from URL).
-  const roomId = "slate-whiteboard-room";
+export const CollaborativeRoom: React.FC<CollaborativeRoomProps> = ({ children, roomId }) => {
 
   return (
     <RoomProvider 

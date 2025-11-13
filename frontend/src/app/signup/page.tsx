@@ -35,7 +35,7 @@ export default function SignupPage() {
 
       // Store token and redirect
       localStorage.setItem("token", data.access_token);
-      window.location.href = "/board"; // Redirect to board after signup
+      window.location.href = "/dashboard"; // Redirect to dashboard after signup
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -122,7 +122,7 @@ export default function SignupPage() {
             {/* Guest Flow */}
             <div className="space-y-4">
               <Link 
-                href="/board/guest"
+                href="/canvas/guest"
                 className="w-full flex flex-col items-center justify-center py-4 px-4 rounded-2xl border border-slate-200 dark:border-white/5 text-slate-800 dark:text-[#e2e8f0] bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-all shadow-sm group"
               >
                 <span className="font-bold text-xs uppercase tracking-widest">Continue as Guest</span>
