@@ -59,6 +59,23 @@ export const useWhiteboard = () => {
 
   useEffect(() => {
     (window as any).whiteboardElements = state.elements;
+    
+    // Auto-save: update lastModified in dashboard metadata
+    const roomId = (window as any).currentWhiteboardRoomId;
+    if (state.elements.length > 0 && roomId) {
+      const saved = localStorage.getItem("my-slates");
+      if (saved) {
+        const slates = JSON.parse(saved);
+        const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        const now = new Date();
+        const dateStr = `${now.getDate().toString().padStart(2, '0')}-${months[now.getMonth()]}-${now.getFullYear().toString().slice(-2)}`;
+        
+        const updated = slates.map((s: any) => 
+          s.id === roomId ? { ...s, lastModified: dateStr } : s
+        );
+        localStorage.setItem("my-slates", JSON.stringify(updated));
+      }
+    }
   }, [state.elements]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
