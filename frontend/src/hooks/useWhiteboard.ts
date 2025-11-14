@@ -19,6 +19,8 @@ export const useWhiteboard = () => {
   const room = useRoom();
   const [doc, setDoc] = useState<Y.Doc>();
   const [provider, setProvider] = useState<any>();
+  const [slateMetadata, setSlateMetadata] = useState<{ name: string }>({ name: "Untitled Slate" });
+  const [canWrite, setCanWrite] = useState(true);
 
   // Initialize Y.Doc and Provider
   useEffect(() => {
@@ -26,6 +28,18 @@ export const useWhiteboard = () => {
     const yProvider = new LiveblocksYjsProvider(room, yDoc);
     setDoc(yDoc);
     setProvider(yProvider);
+
+    // Initial permission check (will be refined with actual sharing logic)
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode");
+    const isGuest = !localStorage.getItem("token");
+    
+    // Guests are read-only if no mode is specified, or if mode is 'read'
+    if (mode === "read" || (isGuest && !mode)) {
+      setCanWrite(false);
+    } else {
+      setCanWrite(true);
+    }
 
     return () => {
       yDoc.destroy();
@@ -38,24 +52,50 @@ export const useWhiteboard = () => {
     return doc.getArray<WhiteboardElement>("elements");
   }, [doc]);
 
-  // Sync Y.Array with React state
-  useEffect(() => {
-    if (!yElements) return;
+  const yMetadata = useMemo(() => {
+    if (!doc) return null;
+    return doc.getMap<any>("metadata");
+  }, [doc]);
 
-    const handleChange = () => {
+  // Sync Y.Array and Y.Map with React state
+  useEffect(() => {
+    if (!yElements || !yMetadata) return;
+
+    const handleElementsChange = () => {
       setState((prev) => ({
         ...prev,
         elements: yElements.toArray(),
       }));
     };
 
-    yElements.observe(handleChange);
-    handleChange(); // Initial sync
+    const handleMetadataChange = () => {
+      const name = yMetadata.get("name") || "Untitled Slate";
+      setSlateMetadata({ name });
+    };
+
+    yElements.observe(handleElementsChange);
+    yMetadata.observe(handleMetadataChange);
+    
+    handleElementsChange(); // Initial sync
+    handleMetadataChange();
+
+    // Handle initial import if flag is present
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("import") === "true" && (window as any).pendingImportElements) {
+      const elements = (window as any).pendingImportElements;
+      delete (window as any).pendingImportElements;
+      
+      // Only inject if the room is empty to avoid overwriting collaborative state
+      if (yElements.length === 0) {
+        yElements.push(elements);
+      }
+    }
 
     return () => {
-      yElements.unobserve(handleChange);
+      yElements.unobserve(handleElementsChange);
+      yMetadata.unobserve(handleMetadataChange);
     };
-  }, [yElements]);
+  }, [yElements, yMetadata]);
 
   useEffect(() => {
     (window as any).whiteboardElements = state.elements;
@@ -81,12 +121,12 @@ export const useWhiteboard = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const addElement = useCallback((element: WhiteboardElement) => {
-    if (!yElements) return;
+    if (!yElements || !canWrite) return;
     yElements.push([element]);
-  }, [yElements]);
+  }, [yElements, canWrite]);
 
   const updateElement = useCallback((id: string, updates: Partial<WhiteboardElement>) => {
-    if (!yElements || !doc) return;
+    if (!yElements || !doc || !canWrite) return;
     
     doc.transact(() => {
       const elements = yElements.toArray();
@@ -98,10 +138,10 @@ export const useWhiteboard = () => {
         yElements.insert(index, [updatedElement]);
       }
     });
-  }, [yElements, doc]);
+  }, [yElements, doc, canWrite]);
 
   const deleteElement = useCallback((id: string) => {
-    if (!yElements || !doc) return;
+    if (!yElements || !doc || !canWrite) return;
 
     doc.transact(() => {
       const elements = yElements.toArray();
@@ -115,7 +155,12 @@ export const useWhiteboard = () => {
       ...prev,
       selectedIds: prev.selectedIds.filter((sid) => sid !== id),
     }));
-  }, [yElements, doc]);
+  }, [yElements, doc, canWrite]);
+
+  const setSlateName = useCallback((name: string) => {
+    if (!yMetadata || !canWrite) return;
+    yMetadata.set("name", name);
+  }, [yMetadata, canWrite]);
 
   const [dragStartPoint, setDragStartPoint] = useState<Point | null>(null);
 
@@ -152,7 +197,7 @@ export const useWhiteboard = () => {
         }
       });
     });
-  }, [yElements, doc, state.selectedIds]);
+  }, [yElements, doc, state.selectedIds, canWrite]);
 
   const getElementAtPosition = useCallback((point: Point): WhiteboardElement | null => {
     // Search backwards (top elements first)
@@ -225,5 +270,8 @@ export const useWhiteboard = () => {
     selectElement,
     dragStartPoint,
     setDragStartPoint,
+    slateMetadata,
+    setSlateName,
+    canWrite,
   };
 };

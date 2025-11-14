@@ -78,9 +78,27 @@ export const downloadSlateFile = (id: string, name: string, elements: Whiteboard
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${name.replace(/\s+/g, "_")}.slate`;
+  const safeName = name.replace(/[^a-z0-9]/gi, "_").toLowerCase() || "untitled";
+  a.download = `${safeName}.slatecanvas`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+};
+
+export const importSlateFile = (file: File): Promise<{ id: string, name: string, elements: WhiteboardElement[] }> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const buffer = new Uint8Array(e.target?.result as ArrayBuffer);
+        const data = deserializeBoard(buffer);
+        resolve(data);
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsArrayBuffer(file);
+  });
 };

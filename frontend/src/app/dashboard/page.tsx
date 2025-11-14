@@ -6,6 +6,7 @@ import { PhysicalSlateWrapper } from "@/components/PhysicalSlateWrapper";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
+import { importSlateFile } from "@/utils/serialization";
 
 interface SlateInstance {
   id: string;
@@ -62,6 +63,45 @@ export default function DashboardPage() {
     router.push(`/canvas/${id}`);
   };
 
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const data = await importSlateFile(file);
+      // Create a new instance in dashboard based on imported data
+      const newSlate: SlateInstance = {
+        id: data.id || uuidv4(),
+        name: data.name || "Imported Slate",
+        lastModified: formatDate(new Date()),
+        previewColor: "#c084fc" // Purple for imported
+      };
+
+      // Check if ID already exists to avoid duplicates
+      const exists = slates.find(s => s.id === newSlate.id);
+      const finalId = exists ? `${newSlate.id}-${Date.now()}` : newSlate.id;
+      if (exists) newSlate.id = finalId;
+
+      const updated = [newSlate, ...slates];
+      setSlates(updated);
+      localStorage.setItem("my-slates", JSON.stringify(updated));
+      
+      // Also save the elements to a temporary storage or just rely on the fact 
+      // that Phase 7 will sync them to Liveblocks if we navigate?
+      // Actually, Room state is in Yjs/Liveblocks. 
+      // For now, we'll just redirect to the room. 
+      // If the room is empty, the user might expect the imported elements to be there.
+      // We should probably store the elements in a way that the canvas can pick them up.
+      // For now, let's just alert success and push to canvas.
+      
+      router.push(`/canvas/${newSlate.id}?import=true`);
+      // We'll handle the actual element injection in the CanvasPage/useWhiteboard if ?import=true
+      (window as any).pendingImportElements = data.elements;
+    } catch (err) {
+      alert("Failed to import slate: Invalid file format.");
+    }
+  };
+
   const deleteSlate = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
@@ -108,7 +148,6 @@ export default function DashboardPage() {
         <main className="flex-1 overflow-y-auto p-8 sm:p-12">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              
               {/* "New Slate" Card */}
               <button 
                 onClick={createNewSlate}
@@ -124,6 +163,28 @@ export default function DashboardPage() {
                   New Slate
                 </span>
               </button>
+
+              {/* "Import Slate" Card */}
+              <label 
+                className="group relative h-48 rounded-2xl border-2 border-dashed border-black/10 dark:border-white/10 flex flex-col items-center justify-center gap-4 hover:border-cyan-400 dark:hover:border-cyan-500 hover:bg-cyan-50/5 dark:hover:bg-cyan-500/5 transition-all active:scale-95 cursor-pointer"
+              >
+                <input 
+                  type="file" 
+                  accept=".slatecanvas" 
+                  onChange={handleImport} 
+                  className="hidden" 
+                />
+                <div className="w-12 h-12 rounded-full bg-cyan-100 dark:bg-cyan-500/20 flex items-center justify-center text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                </div>
+                <span className="text-sm font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                  Import Slate
+                </span>
+              </label>
 
               {/* Slate List */}
               {slates.map((slate) => (
