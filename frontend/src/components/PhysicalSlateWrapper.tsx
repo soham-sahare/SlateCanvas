@@ -44,10 +44,10 @@ export function PhysicalSlateWrapper({
           The Slate Surface (Inner layer) 
           Sits inside the frame, giving a thick border effect
         */}
-        <div className={`absolute transition-all duration-500 overflow-hidden flex flex-col ${
+        <div className={`absolute transition-all duration-500 overflow-hidden flex flex-col bg-[#eeefe9] dark:bg-[#1e232b] ${
           noBorder 
             ? "inset-0 rounded-0 shadow-none border-none" 
-            : "inset-[12px] md:inset-[18px] lg:inset-[24px] rounded-[8px] bg-[#eeefe9] dark:bg-[#1e232b] shadow-[inset_0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_4px_15px_rgba(0,0,0,0.4)]"
+            : "inset-[12px] md:inset-[18px] lg:inset-[24px] rounded-[8px] shadow-[inset_0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_4px_15px_rgba(0,0,0,0.4)]"
         }`}>
           
           {/* Main Grain / Chalk dust texture */}

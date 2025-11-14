@@ -108,7 +108,6 @@ export default function CanvasPage() {
                 </svg>
                 <span className="text-[10px] uppercase tracking-widest font-black">Export</span>
               </button>
-              <ThemeToggle />
               <button 
                 onClick={handleLogout}
                 className="text-[10px] uppercase tracking-widest font-black text-amber-600 dark:text-[#ff8a65] hover:opacity-70 transition-opacity"
