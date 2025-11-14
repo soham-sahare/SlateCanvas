@@ -8,6 +8,7 @@ import { PhysicalSlateWrapper } from "@/components/PhysicalSlateWrapper";
 import { useParams } from "next/navigation";
 import { Whiteboard } from "@/components/Whiteboard";
 import { downloadSlateFile } from "@/utils/serialization";
+import { useStatus } from "@/liveblocks.config";
 
 export default function CanvasPage() {
   const params = useParams();
@@ -50,6 +51,8 @@ export default function CanvasPage() {
     window.location.href = "/";
   };
 
+  const status = useStatus();
+
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden">
       <PhysicalSlateWrapper showFooter={false} noBorder={true}>
@@ -76,9 +79,18 @@ export default function CanvasPage() {
           </div>
 
           <div className="flex items-center gap-6 pointer-events-auto">
-            <div className="hidden sm:flex items-center gap-3 px-4 py-1.5 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-sm">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-              <span className="text-[10px] uppercase tracking-widest font-black text-slate-500 dark:text-slate-400">Collaboration Ready</span>
+            <div className={`hidden sm:flex items-center gap-3 px-4 py-1.5 rounded-full bg-black/5 dark:bg-white/5 border transition-all duration-500 backdrop-blur-sm ${
+              status === "connected" ? "border-green-500/30" : 
+              status === "connecting" || status === "reconnecting" ? "border-amber-500/30" : "border-red-500/30"
+            }`}>
+              <div className={`w-2 h-2 rounded-full ${
+                status === "connected" ? "bg-green-500 animate-pulse" : 
+                status === "connecting" || status === "reconnecting" ? "bg-amber-500 animate-bounce" : "bg-red-500"
+              }`}></div>
+              <span className="text-[10px] uppercase tracking-widest font-black text-slate-500 dark:text-slate-400">
+                {status === "connected" ? "Sync Active" : 
+                 status === "connecting" || status === "reconnecting" ? "Connecting..." : "Sync Offline"}
+              </span>
             </div>
             
             <div className="flex items-center gap-4">

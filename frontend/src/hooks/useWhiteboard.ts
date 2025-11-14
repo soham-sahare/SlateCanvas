@@ -89,11 +89,13 @@ export const useWhiteboard = () => {
     if (!yElements || !doc) return;
     
     doc.transact(() => {
-      const index = yElements.toArray().findIndex(el => el.id === id);
+      const elements = yElements.toArray();
+      const index = elements.findIndex(el => el.id === id);
       if (index !== -1) {
-        const current = yElements.get(index);
+        const current = elements[index];
+        const updatedElement = { ...current, ...updates };
         yElements.delete(index);
-        yElements.insert(index, [{ ...current, ...updates }]);
+        yElements.insert(index, [updatedElement]);
       }
     });
   }, [yElements, doc]);
@@ -102,15 +104,17 @@ export const useWhiteboard = () => {
     if (!yElements || !doc) return;
 
     doc.transact(() => {
-      const index = yElements.toArray().findIndex(el => el.id === id);
+      const elements = yElements.toArray();
+      const index = elements.findIndex(el => el.id === id);
       if (index !== -1) {
         yElements.delete(index);
       }
-      setState((prev) => ({
-        ...prev,
-        selectedIds: prev.selectedIds.filter((sid) => sid !== id),
-      }));
     });
+    
+    setState((prev) => ({
+      ...prev,
+      selectedIds: prev.selectedIds.filter((sid) => sid !== id),
+    }));
   }, [yElements, doc]);
 
   const [dragStartPoint, setDragStartPoint] = useState<Point | null>(null);

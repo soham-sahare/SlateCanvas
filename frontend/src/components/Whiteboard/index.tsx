@@ -54,7 +54,9 @@ const WhiteboardContent: React.FC = () => {
         zoom={state.zoom}
         offset={state.offset}
         selectedIds={state.selectedIds}
-        onElementsChange={(elements) => setState(prev => ({ ...prev, elements }))}
+        onAddElement={addElement}
+        onUpdateElement={updateElement}
+        onDeleteElement={deleteElement}
         onSelectionChange={(selectedIds) => setState(prev => ({ ...prev, selectedIds }))}
         onOffsetChange={(offset) => setState(prev => ({ ...prev, offset }))}
       />

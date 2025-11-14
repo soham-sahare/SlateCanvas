@@ -10,7 +10,9 @@ interface CanvasProps {
   currentTool: Tool;
   zoom: number;
   offset: Point;
-  onElementsChange: (elements: WhiteboardElement[]) => void;
+  onAddElement: (element: WhiteboardElement) => void;
+  onUpdateElement: (id: string, updates: Partial<WhiteboardElement>) => void;
+  onDeleteElement: (id: string) => void;
   onSelectionChange: (selectedIds: string[]) => void;
   onOffsetChange: (offset: Point) => void;
   selectedIds: string[];
@@ -20,7 +22,9 @@ export const Canvas: React.FC<CanvasProps> = ({
   currentTool,
   zoom,
   offset,
-  onElementsChange,
+  onAddElement,
+  onUpdateElement,
+  onDeleteElement,
   onSelectionChange,
   onOffsetChange,
   selectedIds,
@@ -245,7 +249,7 @@ export const Canvas: React.FC<CanvasProps> = ({
           fontSize: 20,
           fontFamily: "Inter",
         } as any;
-        onElementsChange([...elements, newElement]);
+        onAddElement(newElement);
       }
       return;
     }
@@ -267,7 +271,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       });
 
       if (element) {
-        onElementsChange(elements.filter(e => e.id !== element.id));
+        onDeleteElement(element.id);
       }
       return;
     }
@@ -371,45 +375,42 @@ export const Canvas: React.FC<CanvasProps> = ({
       const deltaY = point.y - startPoint.y;
 
       if (resizeHandle) {
-        const updatedElements = elements.map(el => {
-          if (el.id === selectedIds[0]) {
-            let { x, y, width, height } = el;
-            if (resizeHandle === "nw") {
-              return { ...el, x: x + deltaX, y: y + deltaY, width: width - deltaX, height: height - deltaY };
-            } else if (resizeHandle === "ne") {
-              return { ...el, y: y + deltaY, width: width + deltaX, height: height - deltaY };
-            } else if (resizeHandle === "sw") {
-              return { ...el, x: x + deltaX, width: width - deltaX, height: height + deltaY };
-            } else if (resizeHandle === "se") {
-              return { ...el, width: width + deltaX, height: height + deltaY };
-            }
-          }
-          return el;
-        });
-        onElementsChange(updatedElements);
+        const el = elements.find(e => e.id === selectedIds[0]);
+        if (!el) return;
+
+        let { x, y, width, height } = el;
+        if (resizeHandle === "nw") {
+          onUpdateElement(el.id, { x: x + deltaX, y: y + deltaY, width: width - deltaX, height: height - deltaY });
+        } else if (resizeHandle === "ne") {
+          onUpdateElement(el.id, { y: y + deltaY, width: width + deltaX, height: height - deltaY });
+        } else if (resizeHandle === "sw") {
+          onUpdateElement(el.id, { x: x + deltaX, width: width - deltaX, height: height + deltaY });
+        } else if (resizeHandle === "se") {
+          onUpdateElement(el.id, { width: width + deltaX, height: height + deltaY });
+        }
+        
         setStartPoint(point);
         return;
       }
 
       // Drag/Move
-      const updatedElements = elements.map(el => {
-        if (selectedIds.includes(el.id)) {
+      selectedIds.forEach(id => {
+        const el = elements.find(e => e.id === id);
+        if (el) {
           if (el.type === "draw") {
             const drawEl = el as any;
-            return {
-              ...drawEl,
+            onUpdateElement(id, {
               points: drawEl.points.map((p: any) => ({
                 x: p.x + deltaX,
                 y: p.y + deltaY,
               })),
-            };
+            });
+          } else {
+            onUpdateElement(id, { x: el.x + deltaX, y: el.y + deltaY });
           }
-          return { ...el, x: el.x + deltaX, y: el.y + deltaY };
         }
-        return el;
       });
 
-      onElementsChange(updatedElements);
       setStartPoint(point); // Update for next move
       return;
     }
@@ -449,7 +450,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       : Math.abs(currentElement.width) > 2 || Math.abs(currentElement.height) > 2;
 
     if (deservesAddition) {
-      onElementsChange([...elements, currentElement]);
+      onAddElement(currentElement);
     }
     
     setIsDrawing(false);
