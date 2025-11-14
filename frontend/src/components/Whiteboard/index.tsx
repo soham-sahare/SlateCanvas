@@ -12,11 +12,9 @@ interface WhiteboardProps {
   roomId?: string;
 }
 
-export const Whiteboard: React.FC<WhiteboardProps> = ({ roomId = "default-room" }) => {
+export const Whiteboard: React.FC<WhiteboardProps> = () => {
   return (
-    <CollaborativeRoom roomId={roomId}>
-      <WhiteboardContent />
-    </CollaborativeRoom>
+    <WhiteboardContent />
   );
 };
 
