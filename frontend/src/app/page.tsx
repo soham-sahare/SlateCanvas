@@ -31,10 +31,10 @@ export default function Home() {
         <div className="flex items-center gap-2 sm:gap-6">
           <ThemeToggle />
           <Link
-            href={isLoggedIn ? "/dashboard" : "/login"}
+            href={isLoggedIn ? "/canvas" : "/login"}
             className="px-4 sm:px-6 py-2 font-medium text-[10px] sm:text-xs uppercase tracking-widest rounded border border-amber-500/30 dark:border-[#ffb74d]/30 text-amber-600 dark:text-[#ffb74d] hover:bg-amber-500/5 dark:hover:bg-[#ffb74d]/5 hover:border-amber-500/60 dark:hover:border-[#ffb74d]/60 transition-all whitespace-nowrap"
           >
-            {isLoggedIn ? "Dashboard" : "Log In"}
+            {isLoggedIn ? "Slates" : "Log In"}
           </Link>
         </div>
       </header>
@@ -64,7 +64,7 @@ export default function Home() {
           
           <div className="pt-4 flex flex-col items-center justify-center">
             <Link
-              href={isLoggedIn ? "/dashboard" : "/signup"}
+              href={isLoggedIn ? "/canvas" : "/signup"}
               className="px-12 py-4 rounded-lg bg-amber-600 dark:bg-[#ff8a65] text-white dark:text-[#1e293b] font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:bg-amber-700 dark:hover:bg-[#ffab91] hover:-translate-y-0.5 transition-all active:translate-y-0.5"
             >
               Start Drawing

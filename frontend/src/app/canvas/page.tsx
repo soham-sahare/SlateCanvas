@@ -23,44 +23,85 @@ const formatDate = (date: Date) => {
   return `${d < 10 ? '0' + d : d}-${m}-${y}`;
 };
 
-export default function DashboardPage() {
+export default function CanvasDashboard() {
   const router = useRouter();
   const [slates, setSlates] = useState<SlateInstance[]>([]);
+  const [sharedSlates, setSharedSlates] = useState<SlateInstance[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Mock loading saved slates (Phase 5 will involve real persistence)
-    const saved = localStorage.getItem("my-slates");
-    if (saved) {
-      setSlates(JSON.parse(saved));
-    } else {
-      // Create a default first slate
-      const initial: SlateInstance[] = [
-        { 
-          id: "welcome-slate", 
-          name: "Welcome to SlateCanvas", 
-          lastModified: formatDate(new Date()),
-          previewColor: "#ff8a65" 
-        }
-      ];
-      setSlates(initial);
-      localStorage.setItem("my-slates", JSON.stringify(initial));
-    }
-    setLoading(false);
-  }, []);
+  const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
-  const createNewSlate = () => {
-    const id = uuidv4();
-    const newSlate: SlateInstance = {
-      id,
-      name: `Untitled Slate`,
-      lastModified: formatDate(new Date()),
-      previewColor: "#3b82f6"
+  useEffect(() => {
+    const fetchSlates = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const [myRes, sharedRes] = await Promise.all([
+          fetch(`${API_URL}/slates/`, {
+            headers: { "Authorization": `Bearer ${token}` }
+          }),
+          fetch(`${API_URL}/slates/shared`, {
+            headers: { "Authorization": `Bearer ${token}` }
+          })
+        ]);
+
+        if (myRes.ok) {
+          const myData = await myRes.json();
+          setSlates(myData.map((s: any) => ({
+            id: s._id,
+            name: s.name,
+            lastModified: formatDate(new Date(s.last_modified)),
+            previewColor: s.preview_color
+          })));
+        }
+
+        if (sharedRes.ok) {
+          const sharedData = await sharedRes.json();
+          setSharedSlates(sharedData.map((s: any) => ({
+            id: s._id,
+            name: s.name,
+            lastModified: formatDate(new Date(s.last_modified)), // Using last_modified as "joined" date for simplicity
+            previewColor: s.preview_color
+          })));
+        }
+      } catch (err) {
+        console.error("Failed to fetch slates:", err);
+      } finally {
+        setLoading(false);
+      }
     };
-    const updated = [newSlate, ...slates];
-    setSlates(updated);
-    localStorage.setItem("my-slates", JSON.stringify(updated));
-    router.push(`/canvas/${id}`);
+
+    fetchSlates();
+  }, [API_URL]);
+
+  const createNewSlate = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const response = await fetch(`${API_URL}/slates/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: "Untitled Slate",
+          preview_color: ["#ff8a65", "#3b82f6", "#10b981", "#ef4444", "#8b5cf6", "#f59e0b", "#06b6d4"][Math.floor(Math.random() * 7)]
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to create slate");
+      
+      const data = await response.json();
+      router.push(`/canvas/${data._id}`);
+    } catch (err) {
+      alert("Failed to create slate. Please try again.");
+    }
   };
 
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,13 +143,29 @@ export default function DashboardPage() {
     }
   };
 
-  const deleteSlate = (e: React.MouseEvent, id: string) => {
+  const deleteSlate = async (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
+    
     if (confirm("Are you sure you want to delete this slate?")) {
-      const updated = slates.filter(s => s.id !== id);
-      setSlates(updated);
-      localStorage.setItem("my-slates", JSON.stringify(updated));
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const response = await fetch(`${API_URL}/slates/${id}`, {
+          method: "DELETE",
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          setSlates(slates.filter(s => s.id !== id));
+        } else {
+          const data = await response.json();
+          alert(data.detail || "Failed to delete slate.");
+        }
+      } catch (err) {
+        alert("An error occurred while deleting the slate.");
+      }
     }
   };
 
@@ -134,6 +191,9 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20">
+              <span className="text-[10px] font-black uppercase tracking-widest">{slates.length + sharedSlates.length} Slates</span>
+            </div>
             <ThemeToggle />
             <button 
               onClick={handleLogout}
@@ -225,6 +285,47 @@ export default function DashboardPage() {
                 </Link>
               ))}
             </div>
+
+            {/* Shared with Me Section */}
+            {sharedSlates.length > 0 && (
+              <div className="mt-16">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="h-px flex-1 bg-black/5 dark:bg-white/5" />
+                  <h2 className="text-sm font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Shared with Me</h2>
+                  <div className="h-px flex-1 bg-black/5 dark:bg-white/5" />
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                  {sharedSlates.map((slate) => (
+                    <Link 
+                      key={slate.id}
+                      href={`/canvas/${slate.id}`}
+                      className="group relative h-48 rounded-2xl bg-cyan-500/5 dark:bg-cyan-500/10 border border-cyan-500/20 p-6 flex flex-col justify-between hover:scale-[1.02] hover:shadow-xl transition-all"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="px-2 py-0.5 rounded-md bg-cyan-500 text-[8px] font-black uppercase text-white tracking-widest">Shared</div>
+                      </div>
+                      
+                      <div>
+                        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 line-clamp-1 mb-1">
+                          {slate.name}
+                        </h3>
+                        <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400 dark:text-slate-500">
+                          Joined: {slate.lastModified}
+                        </p>
+                      </div>
+
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-1/3 opacity-[0.05] pointer-events-none group-hover:opacity-[0.1] transition-opacity">
+                        <svg viewBox="0 0 100 40" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="30" cy="20" r="10" />
+                          <circle cx="70" cy="20" r="10" />
+                        </svg>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </main>
       </PhysicalSlateWrapper>
