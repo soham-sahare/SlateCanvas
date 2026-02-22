@@ -14,6 +14,8 @@ export const useWhiteboard = () => {
     isDrawing: false,
     zoom: 1,
     offset: { x: 0, y: 0 },
+    showGrid: true,
+    gridSize: 20
   });
 
   const room = useRoom();
@@ -335,27 +337,26 @@ export const useWhiteboard = () => {
       selectedIds: [],
     }));
   }, [yElements, doc, canWrite, state.selectedIds]);
+
+  const toggleGrid = useCallback(() => {
+    setState(prev => ({ ...prev, showGrid: !prev.showGrid }));
+  }, []);
   return {
     state,
     setState,
-    canvasRef,
     setTool,
     addElement,
     updateElement,
     deleteElement,
-    moveElements,
-    getElementAtPosition,
-    getCanvasCoordinates,
-    clearSelection,
     selectElement,
-    dragStartPoint,
-    setDragStartPoint,
-    slateMetadata,
-    setSlateName,
-    canWrite,
+    canvasRef,
     undo,
     redo,
     selectAll,
     deleteSelected,
+    slateMetadata,
+    setSlateName,
+    canWrite,
+    toggleGrid
   };
 };
