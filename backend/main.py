@@ -11,6 +11,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import connect_to_mongo, close_mongo_connection
 from routes.auth import router as auth_router
+from routes.slates import router as slates_router
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
@@ -34,6 +35,7 @@ app.add_middleware(
 
 # Include Routers
 app.include_router(auth_router)
+app.include_router(slates_router)
 
 @app.get("/")
 def read_root():
