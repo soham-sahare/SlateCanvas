@@ -119,7 +119,7 @@ export const useWhiteboard = () => {
   useEffect(() => {
     (window as any).whiteboardElements = state.elements;
     
-    // Auto-save: update lastModified in dashboard metadata
+    // Auto-save: update lastModified in dashboard metadata (Client-side fallback)
     const roomId = (window as any).currentWhiteboardRoomId;
     if (state.elements.length > 0 && roomId) {
       const saved = localStorage.getItem("my-slates");
@@ -136,6 +136,33 @@ export const useWhiteboard = () => {
       }
     }
   }, [state.elements]);
+
+  // Sync Name with Backend (Debounced)
+  useEffect(() => {
+    if (!slateMetadata.name || !canWrite) return;
+    
+    const timeout = setTimeout(async () => {
+      const token = localStorage.getItem("token");
+      const roomId = (window as any).currentWhiteboardRoomId;
+      if (!token || !roomId) return;
+
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+        await fetch(`${API_URL}/slates/${roomId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ name: slateMetadata.name }),
+        });
+      } catch (err) {
+        console.error("Failed to sync name with backend:", err);
+      }
+    }, 2000); // 2 second debounce
+
+    return () => clearTimeout(timeout);
+  }, [slateMetadata.name, canWrite]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
