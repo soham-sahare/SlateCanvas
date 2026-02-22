@@ -14,7 +14,8 @@ export const Cursors = () => {
         return (
           <Cursor
             key={connectionId}
-            color={getUserColor(connectionId)}
+            color={presence.color || getUserColor(connectionId)}
+            name={presence.name || "Guest"}
             x={presence.cursor.x}
             y={presence.cursor.y}
           />
@@ -26,11 +27,12 @@ export const Cursors = () => {
 
 interface CursorProps {
   color: string;
+  name: string;
   x: number;
   y: number;
 }
 
-const Cursor = ({ color, x, y }: CursorProps) => {
+const Cursor = ({ color, name, x, y }: CursorProps) => {
   return (
     <div
       className="absolute top-0 left-0 z-50 pointer-events-none transition-transform duration-75"
@@ -50,6 +52,12 @@ const Cursor = ({ color, x, y }: CursorProps) => {
           fill={color}
         />
       </svg>
+      <div 
+        className="ml-4 mt-2 px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-widest text-white shadow-xl whitespace-nowrap"
+        style={{ backgroundColor: color }}
+      >
+        {name}
+      </div>
     </div>
   );
 };

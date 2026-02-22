@@ -7,6 +7,8 @@ import { PropertiesPanel } from "./PropertiesPanel";
 import { CollaborativeRoom } from "./CollaborativeRoom";
 import { Cursors } from "./Cursors";
 import { useWhiteboard } from "@/hooks/useWhiteboard";
+import { useShortcuts } from "@/hooks/useShortcuts";
+import { exportCanvasToImage } from "@/utils/export";
 
 interface WhiteboardProps {
   roomId?: string;
@@ -26,8 +28,25 @@ const WhiteboardContent: React.FC = () => {
     deleteElement,
     updateElement,
     setState,
-    selectElement 
+    selectElement,
+    canvasRef,
+    undo,
+    redo,
+    selectAll,
+    deleteSelected,
+    slateMetadata,
+    canWrite
   } = useWhiteboard();
+
+  useShortcuts({
+    onSetTool: setTool,
+    onUndo: undo,
+    onRedo: redo,
+    onDelete: deleteSelected,
+    onSelectAll: selectAll,
+    onExport: () => exportCanvasToImage(canvasRef.current, slateMetadata.name),
+    canWrite
+  });
 
   const selectedElements = state.elements.filter(el => state.selectedIds.includes(el.id));
 

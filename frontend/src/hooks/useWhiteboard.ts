@@ -3,7 +3,7 @@ import { WhiteboardElement, Tool, Point, WhiteboardState } from "@/types/whitebo
 import { v4 as uuidv4 } from "uuid";
 import * as Y from "yjs";
 import { LiveblocksYjsProvider } from "@liveblocks/yjs";
-import { useRoom } from "../liveblocks.config";
+import { useRoom, useUpdateMyPresence } from "../liveblocks.config";
 
 export const useWhiteboard = () => {
   const [state, setState] = useState<WhiteboardState>({
@@ -21,6 +21,20 @@ export const useWhiteboard = () => {
   const [provider, setProvider] = useState<any>();
   const [slateMetadata, setSlateMetadata] = useState<{ name: string }>({ name: "Untitled Slate" });
   const [canWrite, setCanWrite] = useState(true);
+  const updateMyPresence = useUpdateMyPresence();
+
+  // Initialize Presence (Name and Color)
+  useEffect(() => {
+    const names = ["Creative Designer", "Lead Architect", "Product Visionary", "Swift Solver", "Bright Mind", "Visual Thinker"];
+    const randomName = names[Math.floor(Math.random() * names.length)];
+    const colors = ["#ff8a65", "#3b82f6", "#10b981", "#ef4444", "#8b5cf6", "#f59e0b", "#06b6d4"];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+    updateMyPresence({ 
+      name: localStorage.getItem("user-email") || randomName,
+      color: randomColor 
+    });
+  }, [updateMyPresence]);
 
   // Initialize Y.Doc and Provider
   useEffect(() => {
@@ -56,6 +70,11 @@ export const useWhiteboard = () => {
     if (!doc) return null;
     return doc.getMap<any>("metadata");
   }, [doc]);
+
+  const undoManager = useMemo(() => {
+    if (!yElements) return null;
+    return new Y.UndoManager(yElements);
+  }, [yElements]);
 
   // Sync Y.Array and Y.Map with React state
   useEffect(() => {
@@ -255,6 +274,40 @@ export const useWhiteboard = () => {
       return { ...prev, selectedIds: [id] };
     });
   }, []);
+
+  const selectAll = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      selectedIds: prev.elements.map(el => el.id)
+    }));
+  }, []);
+
+  const undo = useCallback(() => {
+    undoManager?.undo();
+  }, [undoManager]);
+
+  const redo = useCallback(() => {
+    undoManager?.redo();
+  }, [undoManager]);
+
+  const deleteSelected = useCallback(() => {
+    if (!yElements || !doc || !canWrite || state.selectedIds.length === 0) return;
+
+    doc.transact(() => {
+      state.selectedIds.forEach(id => {
+        const elements = yElements.toArray();
+        const index = elements.findIndex(el => el.id === id);
+        if (index !== -1) {
+          yElements.delete(index);
+        }
+      });
+    });
+
+    setState((prev) => ({
+      ...prev,
+      selectedIds: [],
+    }));
+  }, [yElements, doc, canWrite, state.selectedIds]);
   return {
     state,
     setState,
@@ -273,5 +326,9 @@ export const useWhiteboard = () => {
     slateMetadata,
     setSlateName,
     canWrite,
+    undo,
+    redo,
+    selectAll,
+    deleteSelected,
   };
 };

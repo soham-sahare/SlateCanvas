@@ -10,6 +10,8 @@ const client = createClient({
 type Presence = {
   cursor: { x: number; y: number } | null;
   selection: string[];
+  name?: string;
+  color?: string;
 };
 
 // Storage represents the shared state that is persisted in the room.
