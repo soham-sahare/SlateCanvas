@@ -7,6 +7,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 import { importSlateFile } from "@/utils/serialization";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SlateInstance {
   id: string;
@@ -178,7 +179,12 @@ export default function CanvasDashboard() {
     <div className="h-screen w-screen flex flex-col overflow-hidden">
       <PhysicalSlateWrapper showFooter={true}>
         {/* Header */}
-        <header className="relative w-full z-40 px-6 sm:px-12 py-6 flex items-center justify-between border-b border-black/5 dark:border-white/5 transition-colors">
+        <motion.header 
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="relative w-full z-40 px-6 sm:px-12 py-6 flex items-center justify-between border-b border-black/5 dark:border-white/5 transition-colors"
+        >
           <div className="flex items-center gap-4">
              <div className="w-10 h-10 rounded shadow-inner bg-slate-100 dark:bg-[#3d4554] border border-black/5 dark:border-white/10 flex items-center justify-center text-slate-800 dark:text-[#e2e8f0]">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -202,16 +208,23 @@ export default function CanvasDashboard() {
               Sign Out
             </button>
           </div>
-        </header>
+        </motion.header>
 
         {/* Dashboard Grid */}
         <main className="flex-1 overflow-y-auto p-8 sm:p-12">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+            >
               {/* "New Slate" Card */}
-              <button 
+              <motion.button 
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={createNewSlate}
-                className="group relative h-48 rounded-2xl border-2 border-dashed border-black/10 dark:border-white/10 flex flex-col items-center justify-center gap-4 hover:border-orange-400 dark:hover:border-orange-500 hover:bg-orange-50/5 dark:hover:bg-orange-500/5 transition-all active:scale-95"
+                className="group relative h-48 rounded-2xl border-2 border-dashed border-black/10 dark:border-white/10 flex flex-col items-center justify-center gap-4 hover:border-orange-400 dark:hover:border-orange-500 hover:bg-orange-50/5 dark:hover:bg-orange-500/5 transition-all"
               >
                 <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -222,11 +235,13 @@ export default function CanvasDashboard() {
                 <span className="text-sm font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
                   New Slate
                 </span>
-              </button>
+              </motion.button>
 
               {/* "Import Slate" Card */}
-              <label 
-                className="group relative h-48 rounded-2xl border-2 border-dashed border-black/10 dark:border-white/10 flex flex-col items-center justify-center gap-4 hover:border-cyan-400 dark:hover:border-cyan-500 hover:bg-cyan-50/5 dark:hover:bg-cyan-500/5 transition-all active:scale-95 cursor-pointer"
+              <motion.label 
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                className="group relative h-48 rounded-2xl border-2 border-dashed border-black/10 dark:border-white/10 flex flex-col items-center justify-center gap-4 hover:border-cyan-400 dark:hover:border-cyan-500 hover:bg-cyan-50/5 dark:hover:bg-cyan-500/5 transition-all cursor-pointer"
               >
                 <input 
                   type="file" 
@@ -244,47 +259,57 @@ export default function CanvasDashboard() {
                 <span className="text-sm font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                   Import Slate
                 </span>
-              </label>
+              </motion.label>
 
               {/* Slate List */}
-              {slates.map((slate) => (
-                <Link 
-                  key={slate.id}
-                  href={`/canvas/${slate.id}`}
-                  className="group relative h-48 rounded-2xl bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 p-6 flex flex-col justify-between hover:scale-[1.02] hover:shadow-xl transition-all"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: slate.previewColor }} />
-                    <button 
-                      onClick={(e) => deleteSlate(e, slate.id)}
-                      className="p-2 -mr-2 -mt-2 opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all text-slate-400"
+              <AnimatePresence mode="popLayout">
+                {slates.map((slate, index) => (
+                  <motion.div
+                    key={slate.id}
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    transition={{ delay: index * 0.05, duration: 0.3 }}
+                  >
+                    <Link 
+                      href={`/canvas/${slate.id}`}
+                      className="group relative h-48 w-full rounded-2xl bg-white/50 dark:bg-white/5 border border-black/5 dark:border-white/10 p-6 flex flex-col justify-between hover:scale-[1.02] hover:shadow-xl transition-all block"
                     >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 6h18"></path>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                      </svg>
-                    </button>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 line-clamp-1 mb-1">
-                      {slate.name}
-                    </h3>
-                    <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400 dark:text-slate-500">
-                      Last Edit: {slate.lastModified}
-                    </p>
-                  </div>
+                      <div className="flex justify-between items-start">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: slate.previewColor }} />
+                        <motion.button 
+                          whileHover={{ scale: 1.2, color: "#ef4444" }}
+                          onClick={(e) => deleteSlate(e, slate.id)}
+                          className="p-2 -mr-2 -mt-2 opacity-0 group-hover:opacity-100 transition-all text-slate-400"
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                          </svg>
+                        </motion.button>
+                      </div>
+                      
+                      <div>
+                        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 line-clamp-1 mb-1">
+                          {slate.name}
+                        </h3>
+                        <p className="text-[10px] uppercase font-bold tracking-widest text-slate-400 dark:text-slate-500">
+                          Last Edit: {slate.lastModified}
+                        </p>
+                      </div>
 
-                  {/* Faux drawing preview lines */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-1/3 opacity-[0.05] pointer-events-none group-hover:opacity-[0.1] transition-opacity">
-                    <svg viewBox="0 0 100 40" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M5 20 Q 15 5 25 20 T 45 20 T 65 20 T 85 20" />
-                    </svg>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                      {/* Faux drawing preview lines */}
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-1/3 opacity-[0.05] pointer-events-none group-hover:opacity-[0.1] transition-opacity">
+                        <svg viewBox="0 0 100 40" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M5 20 Q 15 5 25 20 T 45 20 T 65 20 T 85 20" />
+                        </svg>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
 
             {/* Shared with Me Section */}
             {sharedSlates.length > 0 && (
