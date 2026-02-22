@@ -25,3 +25,27 @@ class TokenData(BaseModel):
 
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
+
+class SlateBase(BaseModel):
+    name: str
+    preview_color: str = "#3b82f6"
+
+class SlateCreate(SlateBase):
+    pass
+
+class SlateUpdate(BaseModel):
+    name: Optional[str] = None
+    preview_color: Optional[str] = None
+
+class SlateInDB(SlateBase):
+    id: str = Field(alias="_id")
+    owner_id: str
+    last_modified: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class SharedSlateInDB(BaseModel):
+    id: str = Field(alias="_id")
+    slate_id: str
+    user_id: str
+    permission: str # "read" or "write"
+    joined_at: datetime = Field(default_factory=datetime.utcnow)
